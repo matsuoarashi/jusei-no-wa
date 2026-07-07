@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>令和8年7月 改定のまとめ｜柔整の輪</title>
+<style>
+  :root{
+    --paper:#f6f6f3;--card:#fff;--ink:#1b1e23;--ink-soft:#5a6069;
+    --line:#e3e3dd;--line-strong:#c9c9c0;
+    --plus:#127a5b;--plus-bg:#e7f2ec;--minus:#b23a2e;--minus-bg:#f6e8e6;
+    --accent:#2b4a6f;--accent-soft:#eef2f7;--warn:#9a6a15;--warn-bg:#f7efdd;
+    --shadow:0 1px 2px rgba(27,30,35,.05),0 8px 24px rgba(27,30,35,.06);
+    --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.7;
+    font-feature-settings:"palt";padding:0 0 64px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:40px 0 20px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--accent);
+    text-transform:uppercase;font-weight:600;display:flex;align-items:center;gap:8px}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+  h1{font-size:clamp(24px,5vw,34px);line-height:1.2;letter-spacing:-.01em;font-weight:800;margin:14px 0 10px}
+  .sub{color:var(--ink-soft);font-size:14.5px;max-width:54ch}
+  .updated{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:12px}
+
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:20px}
+  nav.toc .t{font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-bottom:10px}
+  nav.toc ol{list-style:none;display:grid;gap:7px}
+  nav.toc a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;display:flex;gap:9px;align-items:baseline}
+  nav.toc a:hover{text-decoration:underline}
+  nav.toc .num{font-family:var(--mono);font-size:11px;color:var(--ink-soft);min-width:18px}
+
+  section{margin-top:34px;scroll-margin-top:20px}
+  h2{font-size:19px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+  h2 .n{font-family:var(--mono);font-size:12px;color:#fff;background:var(--accent);width:22px;height:22px;
+    border-radius:6px;display:grid;place-items:center;font-weight:600;flex-shrink:0}
+  .lead{color:var(--ink-soft);font-size:14px;margin:8px 0 16px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    box-shadow:var(--shadow);margin-bottom:14px}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  table th,table td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+  table th{font-size:12px;color:var(--ink-soft);font-weight:700}
+  table td.old{color:var(--ink-soft)}
+  table td.new{font-weight:700}
+  table td .up{color:var(--plus);font-family:var(--mono);font-size:12px;font-weight:700;margin-left:6px}
+  table td .dn{color:var(--minus);font-family:var(--mono);font-size:12px;font-weight:700;margin-left:6px}
+  .mono{font-family:var(--mono)}
+
+  .keybox{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;
+    padding:14px 16px;margin:12px 0;font-size:13.5px}
+  .keybox.warn{border-color:var(--warn);background:var(--warn-bg)}
+  .keybox.risk{border-color:var(--minus);background:var(--minus-bg)}
+  .keybox .lbl{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.04em;
+    text-transform:uppercase;margin-bottom:6px;color:var(--accent)}
+  .keybox.warn .lbl{color:var(--warn)}.keybox.risk .lbl{color:var(--minus)}
+  .keybox strong{font-weight:700}
+
+  ul.pts{list-style:none;display:grid;gap:9px;margin-top:4px}
+  ul.pts li{font-size:13.5px;padding-left:20px;position:relative;line-height:1.65}
+  ul.pts li::before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  ul.pts li strong{font-weight:700}
+
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+  details[open]{box-shadow:var(--shadow)}
+  summary{padding:16px 20px;font-size:14.5px;font-weight:700;cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary .q{display:flex;gap:10px;align-items:baseline}
+  summary .qmark{font-family:var(--mono);color:var(--accent);font-weight:800;flex-shrink:0}
+  summary .chev{width:18px;height:18px;flex-shrink:0;transition:transform .2s;stroke:var(--ink-soft);fill:none;stroke-width:2}
+  details[open] summary .chev{transform:rotate(180deg)}
+  .faq-body{padding:0 20px 18px 20px;font-size:13.5px;color:var(--ink-soft);line-height:1.75}
+  .faq-body strong{color:var(--ink);font-weight:700}
+  .faq-body .amark{font-family:var(--mono);color:var(--plus);font-weight:800;margin-right:8px}
+
+  .disclaimer{font-size:11.5px;color:var(--ink-soft);margin-top:26px;line-height:1.6;padding:16px 18px;
+    background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .disclaimer strong{color:var(--ink);font-weight:700}
+  .cta{margin-top:22px;background:linear-gradient(160deg,#2b4a6f,#22374f);color:#fff;border-radius:14px;padding:24px}
+  .cta .t{font-size:16px;font-weight:800;margin-bottom:8px}
+  .cta .d{font-size:13.5px;color:#c8ccd2;line-height:1.7;margin-bottom:16px}
+  .cta-line{display:inline-block;background:#06c755;color:#fff;font-size:15px;font-weight:800;
+    text-decoration:none;padding:14px 28px;border-radius:10px;transition:.15s}
+  .cta-line:hover{background:#05b34c}
+  .tool-link{display:inline-block;margin-top:14px;color:#c8ccd2;font-size:13px;text-decoration:underline}
+  footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-soft);line-height:1.7}
+  a.src{color:var(--accent)}
+  @media(max-width:480px){.card{padding:18px 16px}table{font-size:12.5px}table th,table td{padding:8px 5px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">令和8年7月 柔道整復療養費改定</div>
+    <h1>改定のまとめと、よくある疑問</h1>
+    <p class="sub">7月改定で何がどう変わったのか、現場で迷いやすいところを中心に整理しました。うちの受付でも混乱したところを、同じように困っている先生の役に立てばと思ってまとめています。断定ではなく「こう読んでいます」という共有です。最終判断は必ず管轄の厚生局・保険者の通知でご確認ください。</p>
+    <div class="updated">最終更新：2026年7月／根拠：厚生労働省 保発0601第4号・第5号（令和8年6月1日）ほか</div>
+  </header>
+
+  <nav class="toc">
+    <div class="t">この中にあること</div>
+    <ol>
+      <li><a href="#s1"><span class="num">01</span>まず4つの要点</a></li>
+      <li><a href="#s2"><span class="num">02</span>料金の新旧比較</a></li>
+      <li><a href="#s3"><span class="num">03</span>2部位目の逓減（最大の焦点）</a></li>
+      <li><a href="#s4"><span class="num">04</span>再検料の2回化</a></li>
+      <li><a href="#s5"><span class="num">05</span>3月ルール（初検料の制限）</a></li>
+      <li><a href="#s6"><span class="num">06</span>明細書の発行加算</a></li>
+      <li><a href="#s7"><span class="num">07</span>償還払いの新基準（令和9年1月〜）</a></li>
+      <li><a href="#s8"><span class="num">08</span>自己施術・自家施術の除外</a></li>
+      <li><a href="#faq"><span class="num">09</span>よくある疑問（FAQ）</a></li>
+    </ol>
+  </nav>
+
+  <section id="s1">
+    <h2><span class="n">1</span>まず、4つの要点</h2>
+    <p class="lead">細かい話に入る前に、今回の改定を大づかみに。</p>
+    <div class="card">
+      <ul class="pts">
+        <li><strong>料金は上がった。</strong>全体改定率は＋0.60％で、過去10年で最大級のプラス改定。後療料（打撲・捻挫）は505円→550円と大きく上がりました。</li>
+        <li><strong>でも、2部位目が削られる。</strong>2部位目の後療料等が80％に逓減。多部位が多い院は、料金増と逓減の差し引きで結果が変わります。</li>
+        <li><strong>算定のルールが厳しくなった。</strong>3月ルール（初検料の制限）、明細書の毎回発行、負傷名・部位の記載など、現場の運用が細かく変わりました。</li>
+        <li><strong>来年1月から、償還払いの新基準が動く。</strong>長期・多部位の患者が対象。判定に使う12か月は、今この瞬間から積み上がっています。</li>
+      </ul>
+    </div>
+    <div class="keybox">
+      <div class="lbl">段階的に施行されます</div>
+      <strong>2026年7月1日</strong>：料金改定・2部位逓減・3月ルール・明細書などが施行。<br>
+      <strong>2027年1月</strong>：償還払いの新基準による12か月ローリング審査が始動。
+    </div>
+  </section>
+
+  <section id="s2">
+    <h2><span class="n">2</span>料金の新旧比較</h2>
+    <p class="lead">実務で影響の大きい主な項目です（打撲・捻挫を基準にしています）。</p>
+    <div class="card">
+      <table>
+        <thead><tr><th>項目</th><th>改定前</th><th>改定後</th></tr></thead>
+        <tbody>
+          <tr><td>初検料</td><td class="old mono">1,550円</td><td class="new mono">1,560円<span class="up">+10</span></td></tr>
+          <tr><td>後療料（打撲・捻挫）</td><td class="old mono">505円</td><td class="new mono">550円<span class="up">+45</span></td></tr>
+          <tr><td>再検料</td><td class="old mono">最初の後療日のみ</td><td class="new mono">初回＋2回目まで（420円）<span class="up">回数増</span></td></tr>
+          <tr><td>温罨法料</td><td class="old mono">75円</td><td class="new mono">80円<span class="up">+5</span></td></tr>
+          <tr><td>冷罨法料</td><td class="old mono">85円</td><td class="new mono">80円<span class="dn">−5</span></td></tr>
+          <tr><td>電療料</td><td class="old mono">33円</td><td class="new mono">46円<span class="up">+13</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="keybox">
+      <div class="lbl">ここが分かれ目</div>
+      後療料の＋45円は全部位に効く大きな増収要因。一方で2部位目の逓減は減収要因。<strong>どちらが勝つかは、あなたの院の部位構成しだい</strong>です。<a class="src" href="./simulator.html">増減シミュレーターで、自院の数字を確かめられます。</a>
+    </div>
+  </section>
+
+  <section id="s3">
+    <h2><span class="n">3</span>2部位目の逓減（最大の焦点）</h2>
+    <p class="lead">今回いちばん経営インパクトが大きいのがこれです。</p>
+    <div class="card">
+      <ul class="pts">
+        <li><strong>改定前</strong>：逓減は3部位目の60％のみ。2部位目は減額なし（100％）でした。</li>
+        <li><strong>改定後</strong>：<strong>2部位目が80％</strong>に逓減。3部位目は引き続き60％。</li>
+        <li>対象は後療料だけでなく、<strong>冷罨法料・温罨法料・電療料も同じく逓減</strong>の対象です。</li>
+      </ul>
+      <div class="keybox risk" style="margin-top:14px">
+        <div class="lbl">影響が大きい院</div>
+        2部位で施術する患者が多い院ほど、逓減の影響を強く受けます。うち（西一之江）も2部位が8割で、ここが最大の出血点でした。ただ後療料増額と再検料2回化で、差し引きは意外な結果になることも。
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px">※参考：5か月超の長期は75％、5か月超かつ月10回以上の頻回は50％の逓減対象という規定もあります。詳細は通知でご確認ください。</p>
+    </div>
+  </section>
+
+  <section id="s4">
+    <h2><span class="n">4</span>再検料の2回化</h2>
+    <p class="lead">見落とすと増収機会を逃す、地味だけど大事な変更です。</p>
+    <div class="card">
+      <ul class="pts">
+        <li><strong>改定前</strong>：再検料は最初の後療日の1回のみ算定可でした。</li>
+        <li><strong>改定後</strong>：<strong>初回と2回目の後療日、連続する2回まで</strong>算定可に（1回420円）。</li>
+        <li>継続通院する患者が多い院ほど、ここを取り切れると増収につながります。<strong>「初回しか算定していない」運用だと、この増収はまるごと消えます。</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s5">
+    <h2><span class="n">5</span>3月ルール（初検料の制限）</h2>
+    <p class="lead">受付でいちばん間違えやすいのがここ。返戻に直結します。</p>
+    <div class="card">
+      <div class="keybox warn">
+        <div class="lbl">新ルール</div>
+        <strong>治癒・中止の翌日から3か月以内</strong>に同じ院へ再来院した場合、<strong>別の負傷・別の部位であっても、初検料が算定できません。</strong>
+      </div>
+      <ul class="pts" style="margin-top:14px">
+        <li>救済措置として、中止・治癒から<strong>1か月以上</strong>経過していれば、初検料に代えて<strong>再検料からスタートして2回まで</strong>算定できる特例があります。</li>
+        <li>知らずに初検料を算定すると返戻の原因に。<strong>過去に治癒・中止がついた患者の再来院時は、まず日付の確認を。</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s6">
+    <h2><span class="n">6</span>明細書の発行加算</h2>
+    <p class="lead">運用の手間が増えるところ。患者さんへの説明も要ります。</p>
+    <div class="card">
+      <ul class="pts">
+        <li><strong>改定前</strong>：月1回10円。<strong>改定後</strong>：発行1回あたり10円（「明細書発行加算」に名称変更）。原則は毎回発行です。</li>
+        <li>明細書に<strong>「負傷名」または「施術した部位」</strong>を記載する欄が追加されました。</li>
+        <li>患者の求めに応じて<strong>1か月単位でまとめて発行</strong>する場合は、所定の用紙に<strong>署名（書面での明示的な確認）</strong>が必要。その場合は10円（1回のみ）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s7">
+    <h2><span class="n">7</span>償還払いの新基準（令和9年1月〜）</h2>
+    <p class="lead">施行は来年1月ですが、判定データは今から積み上がります。</p>
+    <div class="card">
+      <div class="keybox warn">
+        <div class="lbl">対象となる患者</div>
+        令和9年1月以降、前月までの<strong>連続する12か月の間に、通算8か月以上かつ9部位以上</strong>の施術を受けている患者。
+      </div>
+      <ul class="pts" style="margin-top:14px">
+        <li>基準に該当しても<strong>即座に償還払いになるわけではありません。</strong>まず注意喚起の通知が送られ、改善状況や事実確認を経て、保険者が個別に判断します。</li>
+        <li>該当者は柔整審査委員会の<strong>重点審査項目</strong>にも位置づけられます。</li>
+        <li><strong>判定に使う12か月は今から始まっています。</strong>長期・多部位の患者は、負傷原因や施術継続の必要性を、今のうちにカルテで固めておくことが大切です。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s8">
+    <h2><span class="n">8</span>自己施術・自家施術の除外</h2>
+    <div class="card">
+      <ul class="pts">
+        <li><strong>自己施術</strong>（柔道整復師が自分自身に行う施術）は療養費の対象外。</li>
+        <li><strong>自家施術</strong>（家族、関連施術所の開設者・従業員への施術）も対象外であることが明文化されました。</li>
+        <li>自己施術については、事前予告なく受領委任が中止される厳しい扱いとされているという解説もあります。取り扱いを再確認しておくと安心です。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2><span class="n">9</span>よくある疑問（FAQ）</h2>
+    <p class="lead">現場で実際に迷いやすいところを、Q&amp;A形式で。先生方から届いた質問も、これから足していきます。</p>
+
+    <details>
+      <summary><span class="q"><span class="qmark">Q</span>2部位目って、結局いくらになるの？</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="faq-body"><span class="amark">A</span>後療料（打撲・捻挫）の場合、2部位目は550円×80％＝<strong>440円</strong>が目安です。3部位目は550円×60％＝330円。温罨法・冷罨法・電療料も同じく逓減の対象になります。端数処理など細部は通知とレセコンの計算をご確認ください。</div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="qmark">Q</span>治癒した患者が、別のケガで3か月以内に来ました。初検料は取れる？</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="faq-body"><span class="amark">A</span>3月ルールにより、<strong>別のケガ・別の部位でも初検料は算定できません</strong>。ただし治癒・中止から1か月以上たっていれば、初検料の代わりに<strong>再検料からスタートして2回まで</strong>算定できる特例があります。再来院時は、前回の治癒・中止の日付を必ず確認するのが安全です。</div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="qmark">Q</span>再検料の「2回目」って、いつの来院のこと？</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="faq-body"><span class="amark">A</span>初回の後療日と、その次の2回目の後療日、<strong>連続する2回まで</strong>が対象です。3回目以降の後療日には算定できません。通院が2回以上続く患者では、2回目の算定を忘れないよう受付でチェックすると取りこぼしを防げます。</div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="qmark">Q</span>明細書は本当に毎回渡さないといけない？</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="faq-body"><span class="amark">A</span>原則は毎回発行です。ただし患者の求めに応じて1か月分をまとめて発行することもでき、その場合は<strong>所定の用紙への署名（書面での確認）</strong>が必要になります。まとめ発行のときの加算は10円（1回のみ）です。明細書には負傷名または施術部位の記載欄も追加されています。</div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="qmark">Q</span>「2部位で減算されるなら、うちは絶対減る」と思っていいの？</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="faq-body"><span class="amark">A</span>必ずしもそうとは限りません。後療料が505円→550円と大きく上がっているため、<strong>逓減の減収を、料金増と再検料2回化が上回る院もあります</strong>。実際、うち（西一之江）は2部位が8割ですが、試算では差し引きプラスでした。自院がどうなるかは、部位構成と通院回数で変わります。増減シミュレーターで確かめてみてください。</div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="qmark">Q</span>償還払いの「8か月・9部位」は、いつから数えるの？</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="faq-body"><span class="amark">A</span>運用開始は令和9年1月ですが、判定は「前月までの連続する12か月」を見ます。つまり<strong>2026年のうちから、そのカウントは実質的に積み上がっています</strong>。今から長期・多部位の患者を把握し、負傷原因や施術の必要性をカルテに整えておくことが、来年の備えになります。該当してもすぐ償還払いになるわけではなく、通知や事実確認の段階を経ます。</div>
+    </details>
+
+    <details>
+      <summary><span class="q"><span class="qmark">Q</span>家族が来院したとき、保険は使える？</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="faq-body"><span class="amark">A</span>柔道整復師自身への施術（自己施術）、および家族・関連施術所の開設者や従業員への施術（自家施術）は、<strong>療養費の対象外</strong>であることが明文化されました。取り扱いには特に注意が必要です。</div>
+    </details>
+  </section>
+
+  <div class="disclaimer">
+    <strong>このページは、断定的な算定指導ではありません。</strong> 西一之江整骨院が自院の対応のために調べ、同じ改定で困る先生方の参考になればとまとめた共有です。制度の解釈や運用の細部は、保険者・地方厚生局によって異なる場合があります。実際の算定・請求の判断は、必ず管轄の厚生局や保険者の最新通知でご確認ください。誤りに気づかれたら、公式LINEから教えていただけると、みんなのために直せます。
+  </div>
+
+  <div class="cta">
+    <div class="t">分からないところは、ひとりで抱えなくていい</div>
+    <div class="d">「うちのケースはどうなる？」という疑問や、「うちはこう対応した」という工夫を、公式LINE「柔整の輪」で分け合っています。ここに寄せられた質問は、このFAQに追記して、みんなで使える形にしていきます。売り込みはありません。</div>
+    <a class="cta-line" href="https://lin.ee/WNTbkci" target="_blank" rel="noopener">「柔整の輪」に加わる（公式LINE）</a>
+    <br><a class="tool-link" href="./simulator.html">→ 増減シミュレーターで、自院の増減を試算する</a>
+  </div>
+
+  <footer>
+    根拠通知：厚生労働省「柔道整復師の施術に係る療養費の算定基準」の一部改正について（令和8年6月1日 保発0601第4号）、「柔道整復師の施術に係る療養費について」の一部改正について（同 保発0601第5号）ほか。<br>
+    このまとめは西一之江整骨院が作成し、柔整の輪で無償共有しているものです。内容は改定情報に基づく参考であり、算定判断の根拠にはなりません。
+  </footer>
+</div>
+</body>
+</html>
