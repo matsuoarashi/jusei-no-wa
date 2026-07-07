@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>僕たちの挑戦｜柔整の輪</title>
+<meta name="description" content="接骨院の集客・売上のために、うちがやってみたこと。成功も空振りも同じ重さで。西一之江整骨院が自院用に作ったものを無償公開しています。">
+<style>
+  :root{
+    --paper:#f6f6f3;
+    --card:#fff;
+    --ink:#1b1e23;
+    --ink-soft:#5a6069;
+    --line:#e3e3dd;
+    --line-strong:#c9c9c0;
+    --plus:#127a5b;
+    --plus-bg:#e7f2ec;
+    --minus:#b23a2e;
+    --minus-bg:#f6e8e6;
+    --accent:#2b4a6f;
+    --accent-soft:#eef2f7;
+    --warn:#9a6a15;
+    --warn-bg:#f7efdd;
+    --shadow:0 1px 2px rgba(27,30,35,.05),0 8px 24px rgba(27,30,35,.06);
+    --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.7;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+  header{
+    background:linear-gradient(160deg,#2b4a6f,#22374f);
+    color:#fff;
+    padding:36px 0 32px;
+  }
+  .kicker{font-size:13px;letter-spacing:.14em;opacity:.82;margin:0 0 8px;}
+  header h1{font-size:26px;font-weight:800;margin:0 0 12px;letter-spacing:.02em;}
+  header p{margin:0;font-size:14.5px;opacity:.92;line-height:1.8;}
+
+  main{padding:34px 0 10px;}
+
+  .lead{
+    font-size:15.5px;
+    color:var(--ink-soft);
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px 22px;
+    box-shadow:var(--shadow);
+    margin:0;
+  }
+  .lead strong{color:var(--ink);font-weight:700;}
+
+  /* draft banner — toggled by body.draft (remove the word "draft" to publish) */
+  .sample-banner{display:none;}
+  body.draft .sample-banner{
+    display:block;
+    font-size:12.5px;
+    color:var(--warn);
+    background:var(--warn-bg);
+    border-left:4px solid var(--warn);
+    border-radius:0 10px 10px 0;
+    padding:12px 16px;
+    margin:0 0 16px;
+    line-height:1.7;
+  }
+
+  .sec-head{margin-top:34px;margin-bottom:16px;}
+  .sec-head h2{
+    display:flex;align-items:center;gap:12px;
+    font-size:19px;font-weight:800;margin:0;line-height:1.5;
+  }
+  .sec-head h2 .num{
+    flex:0 0 auto;width:22px;height:22px;border-radius:6px;
+    background:var(--accent);color:#fff;font-size:13px;
+    display:inline-flex;align-items:center;justify-content:center;font-weight:700;
+  }
+  .sec-head .note{font-size:13.5px;color:var(--ink-soft);margin:8px 0 0;padding-left:34px;}
+
+  .keybox{
+    font-size:13.8px;color:var(--ink-soft);
+    background:var(--accent-soft);border-left:4px solid var(--accent);
+    border-radius:0 10px 10px 0;padding:14px 16px;margin:0 0 20px;line-height:1.85;
+  }
+  .keybox b{color:var(--ink);}
+
+  /* result legend */
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;}
+  .legend .lg{font-size:12.5px;font-weight:700;padding:3px 12px;border-radius:100px;}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin:0 0 16px;
+  }
+  .tag{display:inline-block;font-size:12.5px;font-weight:700;padding:3px 12px;border-radius:100px;margin-bottom:12px;}
+  .tag-win{color:var(--plus);background:var(--plus-bg);}
+  .tag-even{color:var(--warn);background:var(--warn-bg);}
+  .tag-miss{color:var(--minus);background:var(--minus-bg);}
+  .card h3{font-size:16.5px;font-weight:700;margin:0 0 10px;line-height:1.6;}
+  .card p{margin:0 0 12px;font-size:15px;}
+  .card p:last-child{margin-bottom:0;}
+  /* cost row */
+  .cost{
+    display:inline-block;font-size:13px;color:var(--ink-soft);
+    background:var(--paper);border:1px solid var(--line);
+    border-radius:8px;padding:4px 12px;margin:0 0 12px;
+  }
+  .cost b{color:var(--ink);font-weight:700;}
+  .card .byline{font-size:13px;color:var(--ink-soft);margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);}
+  /* left accent by result */
+  .card.win{border-left:3px solid var(--plus);}
+  .card.even{border-left:3px solid var(--warn);}
+  .card.miss{border-left:3px solid var(--minus);}
+
+  /* voices (集まった声) */
+  .voice{
+    background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);margin:0 0 12px;
+  }
+  .voice .vtag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:100px;margin-bottom:8px;}
+  .voice p{margin:0 0 8px;font-size:14.8px;}
+  .voice .who{font-size:12.5px;color:var(--accent);font-weight:500;}
+
+  .cta{
+    background:linear-gradient(160deg,#2b4a6f,#22374f);color:#fff;
+    border-radius:14px;padding:24px;text-align:center;box-shadow:var(--shadow);margin:20px 0 10px;
+  }
+  .cta h3{font-size:18px;margin:0 0 10px;font-weight:800;}
+  .cta p{font-size:14.5px;opacity:.92;margin:0 0 20px;line-height:1.8;}
+  .cta a.line-btn{
+    display:inline-block;background:#06c755;color:#fff;text-decoration:none;
+    font-weight:800;font-size:15.5px;padding:14px 28px;border-radius:10px;
+  }
+  .cta small{display:block;margin-top:16px;font-size:12px;opacity:.72;line-height:1.7;}
+
+  .crosslinks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:34px;}
+  .crosslinks a{
+    display:block;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);
+  }
+  .crosslinks a .cl-k{font-size:12px;color:var(--accent);letter-spacing:.08em;}
+  .crosslinks a .cl-t{font-size:15px;font-weight:700;margin-top:4px;display:block;}
+  .crosslinks a .cl-d{font-size:12.5px;color:var(--ink-soft);margin-top:4px;display:block;line-height:1.6;}
+
+  footer{margin-top:40px;padding:26px 0 40px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+
+  @media(max-width:480px){
+    .card{padding:18px 16px;}
+    .crosslinks{grid-template-columns:1fr;}
+    .sec-head .note{padding-left:0;}
+  }
+</style>
+</head>
+<!-- 公開するときは、下の class="draft" から draft の1語を消してください。全ての記入例バナーが一括で消えます。 -->
+<body class="draft">
+
+<header>
+  <div class="wrap">
+    <p class="kicker">柔整の輪</p>
+    <h1>僕たちの挑戦</h1>
+    <p>患者さんを増やす、自費を伸ばす——院を続けるための「やってみた」を持ち寄る場所です。<br>
+    うまくいった話も、空振りした話も、同じ重さで。次に挑む先生の、地図の代わりになれば。</p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="lead">
+    このページは、<strong>西一之江整骨院（院長：善茂作 昌之）</strong>が自院のために作ったものを、
+    同じ立場の先生に役立てばと無償で公開しているものです。売り込みも勧誘もありません。
+    「これをやったら、こうだった」を正直に貯めていく、集客と経営の実験ノートです。
+  </p>
+
+  <div class="keybox" style="margin-top:20px;">
+    <b>結果は3つのしるしで分けています。</b>
+    やってみた挑戦を、<b>成功／トントン／空振り</b>の3段階で正直に色分けしました。
+    <b>成功</b>＝はっきり手応えがあった。<b>トントン</b>＝かけた分くらいは返ってきた。<b>空振り</b>＝反応が薄かった。
+    どれも同じくらい役に立ちます。うまくいった話だけでは、地図になりませんから。
+  </div>
+
+  <div class="legend">
+    <span class="lg tag-win">成功</span>
+    <span class="lg tag-even">トントン</span>
+    <span class="lg tag-miss">空振り</span>
+  </div>
+
+  <div class="keybox">
+    <b>投稿者の呼び方について。</b>
+    集まった挑戦は、<b>「地方ブロック＋院の形」</b>だけで匿名紹介しています（例：近畿・ひとり院の先生）。
+    院の形は、<b>ひとり院／スタッフ数／開業年数</b>のどれか一つだけ。
+    都道府県・お名前・性別は載せません。特定を避けるためであり、
+    読んだ先生が「これはうちでもできそうだ」と受け取りやすくするためでもあります。
+  </div>
+
+  <div class="sec-head">
+    <h2><span class="num">1</span>まず、うちの挑戦から</h2>
+    <p class="note">西一之江整骨院・善茂作が、実際にやってみたことです。</p>
+  </div>
+
+  <!-- ▼▼▼ ここから「うちの挑戦」の投稿。1件足すときは、下のテンプレを丸ごとコピーして中身を書き換える ▼▼▼ -->
+
+  <!-- ★1件テンプレ（コピー元。消さない）
+       結果は3種類。カードの class と tag を対で切り替える：
+         成功  → <div class="card win">   … <span class="tag tag-win">成功</span>
+         トントン→ <div class="card even">  … <span class="tag tag-even">トントン</span>
+         空振り → <div class="card miss">  … <span class="tag tag-miss">空振り</span>
+       費用の目安は .cost の行に。書けないときはこの行ごと消してよい。
+  <div class="card win">
+    <span class="tag tag-win">成功</span>
+    <h3>（何をやったか・見出し）</h3>
+    <div class="cost">かけた費用：<b>（例：月1万円 / 一式3万円）</b></div>
+    <p>（何を狙って、何をやったか）</p>
+    <p>（結果どうだったか）</p>
+    <p class="byline">西一之江整骨院・善茂作 昌之</p>
+  </div>
+  -->
+
+  <div class="sample-banner">※これは記入例です。善茂作先生の実際の挑戦に、数字を入れて差し替えてください。</div>
+
+  <div class="card win">
+    <span class="tag tag-win">成功</span>
+    <h3>SEOを整えてMEO（Googleマップ）まで手を入れたら、新規が増え出した</h3>
+    <div class="cost">かけた費用：<b>自分でやれば実質ゼロ（手間だけ）／外注なら月3〜5万円が相場</b></div>
+    <p>まずホームページの中身を、症状ごとに読みやすく整え直しました。そのうえでGoogleビジネスプロフィール（マップの情報）を作り込んで、写真・診療時間・口コミへの返信まできちんとやるようにしました。</p>
+    <p>すぐには動きませんでしたが、二〜三か月かけて「近くの接骨院」で見つけてもらえる回数が増え、そこから新規の患者さんが少しずつ入り出しました。地味ですが、いちど整えると効き続けるのが大きいです。</p>
+    <p class="byline">西一之江整骨院・善茂作 昌之</p>
+  </div>
+
+  <div class="sample-banner">※これは記入例です。善茂作先生の実際の挑戦に、数字を入れて差し替えてください。</div>
+
+  <div class="card even">
+    <span class="tag tag-even">トントン</span>
+    <h3>新聞折込をやってみたら、値段相応の反応だった</h3>
+    <div class="cost">かけた費用：<b>B4・1万枚で約6〜9万円（配布3〜4円/枚＋印刷3〜5万円が目安）</b></div>
+    <p>エリアを絞って新聞折込を入れてみました。まったくの空振りではなく、ちゃんと問い合わせも来院もありました。</p>
+    <p>ただ、かかった費用と来てくれた人数を並べてみると、儲かりも損もしない「トントン」という手応え。悪くはないけれど、これ一本に頼るのは違うな、というのが正直な感想です。撒く枚数やチラシの中身を変えれば、まだ伸びしろはありそうです。</p>
+    <p class="byline">西一之江整骨院・善茂作 昌之</p>
+  </div>
+
+  <div class="sample-banner">※これは記入例です。善茂作先生の実際の挑戦に、数字を入れて差し替えてください。</div>
+
+  <div class="card miss">
+    <span class="tag tag-miss">空振り</span>
+    <h3>近所へのポスティングは、思ったより反応が薄かった</h3>
+    <div class="cost">かけた費用：<b>自分で投函すればチラシ印刷代のみ／業者依頼は配布3.5〜12円/枚（1万枚・印刷込みで約6万円、反応率0.1〜0.3%）</b></div>
+    <p>近くの住宅にコツコツ手で投函してみました。手間はかけたぶん、正直「これで来てくれるはず」と期待していました。</p>
+    <p>結果は反応薄。まったくゼロではないものの、投函した枚数に対して来院はごくわずかでした。撒き方が悪かったのか、チラシの中身か、タイミングか——同じ轍を踏まないよう、うまくいった先生のやり方をこのページで教えてほしいくらいです。</p>
+    <p class="byline">西一之江整骨院・善茂作 昌之</p>
+  </div>
+
+  <div class="sample-banner">※これは記入例です。善茂作先生の実際の挑戦に、数字を入れて差し替えてください。</div>
+
+  <div class="card win">
+    <span class="tag tag-win">成功</span>
+    <h3>自費割合を上げたくて、物販（ファスティング酵素）を置いてみた</h3>
+    <div class="cost">かけた費用：<b>初回仕入れ数万円〜（治療院・サロン向けの卸ルートあり。小ロットから開始可）</b></div>
+    <p>保険に頼りきりの体質を変えたくて、施術と相性のいい物販として、ファスティング用の酵素ドリンクを院内に置いてみました。合いそうな患者さんにだけ、押しつけずにご案内する形です。</p>
+    <p>爆発的にではありませんが、自費の売上に少し貢献しました。何より「保険以外の柱を持てる」と実感できたのが収穫です。改定で保険が厳しくなるなか、こういう小さな自費の芽を育てておく意味は大きいと感じています。</p>
+    <p class="byline">西一之江整骨院・善茂作 昌之</p>
+  </div>
+
+  <!-- ▲▲▲ 「うちの挑戦」の投稿ここまで ▲▲▲ -->
+
+  <div class="sec-head">
+    <h2><span class="num">2</span>集まった挑戦</h2>
+    <p class="note">同じように院を続ける先生たちからの、匿名の共有です。</p>
+  </div>
+
+  <!-- ▼▼▼ ここから「集まった挑戦」の投稿。1件足すときは、下のテンプレを丸ごとコピーして中身を書き換える ▼▼▼ -->
+
+  <!-- ★1件テンプレ（コピー元。消さない）
+       vtag の色を結果で切り替える：成功→tag-win ／ トントン→tag-even ／ 空振り→tag-miss
+       who は「ブロック・院の形の先生」。ブロック＝近畿/関東/九州… 院の形＝ひとり院/スタッフ〇人/開業〇年目 のどれか一つ。
+       受取日や掲載可否は、この < !-- -- > コメント内にメモしておくと本文に出ずに管理できる。
+  <div class="voice">
+    <span class="vtag tag-win">成功</span>
+    <p>「（本文。何をやって、いくらくらいで、どうだったか）」</p>
+    <p class="who">（ブロック）・（院の形）の先生</p>
+  </div>
+  memo: 受取日 2026-□□-□□ ／ 掲載可否 OK
+  -->
+
+  <div class="sample-banner">※以下は掲載イメージのための記入例です。実際に届いた挑戦に差し替えてください。</div>
+
+  <div class="voice">
+    <span class="vtag tag-win">成功</span>
+    <p>「LINE公式で来院後のフォロー配信を始めたら、離脱していた患者さんの再来が増えました。費用は無料枠の範囲、実質ゼロ。手間だけです。」</p>
+    <p class="who">関東・スタッフ2人の院の先生</p>
+  </div>
+
+  <div class="voice">
+    <span class="vtag tag-even">トントン</span>
+    <p>「地域情報誌に小さく広告を出してみました（枠代で数万円）。問い合わせは来ましたが、費用を考えるとトントン。載せる号や紙面の位置で変わりそうです。」</p>
+    <p class="who">近畿・ひとり院の先生</p>
+  </div>
+
+  <div class="voice">
+    <span class="vtag tag-miss">空振り</span>
+    <p>「駅前で割引チラシを配ってみましたが、値引き目当ての一見さんが少し来ただけで続きませんでした。うちには合わなかったです。」</p>
+    <p class="who">九州・開業5年目の先生</p>
+  </div>
+
+  <!-- ▲▲▲ 「集まった挑戦」の投稿ここまで ▲▲▲ -->
+
+  <div class="sec-head">
+    <h2><span class="num">3</span>あなたの「挑戦」も聞かせてください</h2>
+    <p class="note">成功でも、空振りでも。数字がなくても大丈夫です。</p>
+  </div>
+
+  <div class="cta">
+    <h3>公式LINEから、ひとことでどうぞ</h3>
+    <p>きれいにまとめなくて大丈夫です。<br>「これをやったら、こうだった」——うまくいった話も、ダメだった話も、次の誰かの助けになります。<br>いただいた挑戦は、地方ブロックと院の形だけの匿名で紹介します。</p>
+    <a class="line-btn" href="https://lin.ee/WNTbkci" target="_blank" rel="noopener">LINEで挑戦を送る</a>
+    <small>お名前・院名・都道府県は掲載しません。<br>掲載してほしくない場合は、その旨ひとこと添えてください。</small>
+  </div>
+
+  <div class="crosslinks">
+    <a href="uchi.html">
+      <span class="cl-k">SHARE</span>
+      <span class="cl-t">僕たちの改定対策</span>
+      <span class="cl-d">改定への向き合い方を、院長どうしで分け合う</span>
+    </a>
+    <a href="simulator.html">
+      <span class="cl-k">TOOL</span>
+      <span class="cl-t">増減シミュレーター</span>
+      <span class="cl-d">令和8年7月改定で、自院の収入がどう動くかを試算</span>
+    </a>
+    <a href="matome.html">
+      <span class="cl-k">GUIDE</span>
+      <span class="cl-t">改定のまとめ＋FAQ</span>
+      <span class="cl-d">後療料・逓減・3月ルールなど、要点をやさしく整理</span>
+    </a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    柔整の輪 ／ 提供：西一之江整骨院（院長：善茂作 昌之）<br>
+    このサイトは自院用に作成したものを無償公開しています。営利目的の勧誘は行いません。<br>
+    掲載している集客・物販などの取り組みは各院の一例です。効果を保証するものではなく、実施は各院の判断でお願いします。<br>
+    改定の根拠：保発0601第4号・第5号（令和8年7月改定）。
+  </div>
+</footer>
+
+</body>
+</html>
