@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>うちはこうしてる｜柔整の輪</title>
+<meta name="description" content="院長どうしが「うちはこうしてる」を分け合う場。西一之江整骨院が自院用に作ったものを無償公開しています。">
+<style>
+  :root{
+    --paper:#f6f6f3;
+    --card:#fff;
+    --ink:#1b1e23;
+    --ink-soft:#5a6069;
+    --line:#e3e3dd;
+    --line-strong:#c9c9c0;
+    --plus:#127a5b;
+    --plus-bg:#e7f2ec;
+    --minus:#b23a2e;
+    --minus-bg:#f6e8e6;
+    --accent:#2b4a6f;
+    --accent-soft:#eef2f7;
+    --warn:#9a6a15;
+    --warn-bg:#f7efdd;
+    --shadow:0 1px 2px rgba(27,30,35,.05),0 8px 24px rgba(27,30,35,.06);
+    --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.7;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+  header{
+    background:linear-gradient(160deg,#2b4a6f,#22374f);
+    color:#fff;
+    padding:36px 0 32px;
+  }
+  .kicker{font-size:13px;letter-spacing:.14em;opacity:.82;margin:0 0 8px;}
+  header h1{font-size:26px;font-weight:800;margin:0 0 12px;letter-spacing:.02em;}
+  header p{margin:0;font-size:14.5px;opacity:.92;line-height:1.8;}
+
+  main{padding:34px 0 10px;}
+
+  .lead{
+    font-size:15.5px;
+    color:var(--ink-soft);
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px 22px;
+    box-shadow:var(--shadow);
+    margin:0;
+  }
+  .lead strong{color:var(--ink);font-weight:700;}
+
+  /* draft banner — toggled by body.draft (remove the word "draft" to publish) */
+  .sample-banner{display:none;}
+  body.draft .sample-banner{
+    display:block;
+    font-size:12.5px;
+    color:var(--warn);
+    background:var(--warn-bg);
+    border-left:4px solid var(--warn);
+    border-radius:0 10px 10px 0;
+    padding:12px 16px;
+    margin:0 0 16px;
+    line-height:1.7;
+  }
+
+  .sec-head{margin-top:34px;margin-bottom:16px;}
+  .sec-head h2{
+    display:flex;align-items:center;gap:12px;
+    font-size:19px;font-weight:800;margin:0;line-height:1.5;
+  }
+  .sec-head h2 .num{
+    flex:0 0 auto;width:22px;height:22px;border-radius:6px;
+    background:var(--accent);color:#fff;font-size:13px;
+    display:inline-flex;align-items:center;justify-content:center;font-weight:700;
+  }
+  .sec-head .note{font-size:13.5px;color:var(--ink-soft);margin:8px 0 0;padding-left:34px;}
+
+  .keybox{
+    font-size:13.8px;color:var(--ink-soft);
+    background:var(--accent-soft);border-left:4px solid var(--accent);
+    border-radius:0 10px 10px 0;padding:14px 16px;margin:0 0 20px;line-height:1.85;
+  }
+  .keybox b{color:var(--ink);}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin:0 0 16px;
+  }
+  .tag{display:inline-block;font-size:12.5px;font-weight:700;padding:3px 12px;border-radius:100px;margin-bottom:12px;}
+  .tag-win{color:var(--plus);background:var(--plus-bg);}
+  .tag-fail{color:var(--warn);background:var(--warn-bg);}
+  .card h3{font-size:16.5px;font-weight:700;margin:0 0 10px;line-height:1.6;}
+  .card p{margin:0 0 12px;font-size:15px;}
+  .card p:last-child{margin-bottom:0;}
+  .card .byline{font-size:13px;color:var(--ink-soft);margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);}
+  .card.fail{background:var(--minus-bg);border-color:#eccfca;}
+
+  .voice{
+    background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);margin:0 0 12px;
+  }
+  .voice p{margin:0 0 8px;font-size:14.8px;}
+  .voice .who{font-size:12.5px;color:var(--accent);font-weight:500;}
+
+  .cta{
+    background:linear-gradient(160deg,#2b4a6f,#22374f);color:#fff;
+    border-radius:14px;padding:24px;text-align:center;box-shadow:var(--shadow);margin:20px 0 10px;
+  }
+  .cta h3{font-size:18px;margin:0 0 10px;font-weight:800;}
+  .cta p{font-size:14.5px;opacity:.92;margin:0 0 20px;line-height:1.8;}
+  .cta a.line-btn{
+    display:inline-block;background:#06c755;color:#fff;text-decoration:none;
+    font-weight:800;font-size:15.5px;padding:14px 28px;border-radius:10px;
+  }
+  .cta small{display:block;margin-top:16px;font-size:12px;opacity:.72;line-height:1.7;}
+
+  .crosslinks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:34px;}
+  .crosslinks a{
+    display:block;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);
+  }
+  .crosslinks a .cl-k{font-size:12px;color:var(--accent);letter-spacing:.08em;}
+  .crosslinks a .cl-t{font-size:15px;font-weight:700;margin-top:4px;display:block;}
+  .crosslinks a .cl-d{font-size:12.5px;color:var(--ink-soft);margin-top:4px;display:block;line-height:1.6;}
+
+  footer{margin-top:40px;padding:26px 0 40px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+
+  @media(max-width:480px){
+    .card{padding:18px 16px;}
+    .crosslinks{grid-template-columns:1fr;}
+    .sec-head .note{padding-left:0;}
+  }
+</style>
+</head>
+<!-- 公開するときは、下の class="draft" から draft の1語を消してください。全ての記入例バナーが一括で消えます。 -->
+<body class="draft">
+
+<header>
+  <div class="wrap">
+    <p class="kicker">柔整の輪</p>
+    <h1>うちはこうしてる</h1>
+    <p>令和8年7月の改定を、院長どうしで乗り越えるための場所です。<br>
+    正解を配る場ではありません。「うちはこうしてる」を持ち寄って、一緒に生き延びるための場です。</p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="lead">
+    このページは、<strong>西一之江整骨院（院長：善茂作 昌之）</strong>が自院のために作ったものを、
+    同じ立場の先生に役立てばと無償で公開しているものです。売り込みも勧誘もありません。
+    改定のたびに一人で抱える不安を、少しだけ分け合えたらと思っています。
+  </p>
+
+  <div class="keybox" style="margin-top:20px;">
+    <b>投稿者の呼び方について。</b>
+    集まった声は、<b>「地方ブロック＋院の形」</b>だけで匿名紹介しています（例：近畿・ひとり院の先生）。
+    院の形は、<b>ひとり院／スタッフ数／開業年数</b>のどれか一つだけ。
+    都道府県・お名前・性別は載せません。特定を避けるためであり、
+    読んだ先生が「これはうちのことだ」と自分ごととして受け取りやすくするためでもあります。
+  </div>
+
+  <div class="sec-head">
+    <h2><span class="num">1</span>まず、うちの話から</h2>
+    <p class="note">西一之江整骨院・善茂作の、正直な経験です。</p>
+  </div>
+
+  <div class="sample-banner">※これは記入例です。善茂作先生の実際の経験に差し替えてください。</div>
+
+  <div class="card">
+    <span class="tag tag-win">うまくいった話</span>
+    <h3>明細書の毎回発行を、改定前に前倒しで始めた</h3>
+    <p>毎回発行が義務になると聞いて、正直「窓口が回らなくなる」と身構えました。それでも改定の三か月前から、まず自分の院で先に始めてみることにしました。</p>
+    <p>最初の数日は確かにもたつきましたが、二週間もすると受付の動きが型になり、患者さんからも「毎回もらえるのは分かりやすい」と言ってもらえるように。改定当日を慌てずに迎えられたのが、いちばん大きかったです。</p>
+    <p class="byline">西一之江整骨院・善茂作 昌之</p>
+  </div>
+
+  <div class="sample-banner">※これは記入例です。善茂作先生の実際の経験に差し替えてください。</div>
+
+  <div class="card fail">
+    <span class="tag tag-fail">うちも危なかった話</span>
+    <h3>逓減の計算を後回しにして、月末に青くなった</h3>
+    <p>2部位80％・3部位60％の逓減は、頭では分かっていたつもりでした。でも実際の請求で自分の院の平均部位数をきちんと出していなかったせいで、「思っていたより収入が下がる」と気づいたのが月末近く。</p>
+    <p>あのとき慌てて数字を並べ直して、なんとか立て直しました。先に一度シミュレーターで自院の数字を入れておけば、心の準備ができたはずです。同じ思いをする先生が一人でも減ればと思って、この話を書いています。</p>
+    <p class="byline">西一之江整骨院・善茂作 昌之</p>
+  </div>
+
+  <div class="sec-head">
+    <h2><span class="num">2</span>集まった声</h2>
+    <p class="note">同じ改定を迎える先生たちからの、匿名の共有です。</p>
+  </div>
+
+  <div class="sample-banner">※以下は掲載イメージのための記入例です。実際に届いた声に差し替えてください。</div>
+
+  <div class="voice">
+    <p>「再検料が2回取れるようになった分、初回の問診と再検のタイミングを院内で紙一枚にまとめ直しました。スタッフ間で判断がぶれなくなったのが一番の収穫でした。」</p>
+    <p class="who">近畿・スタッフ3人の院の先生</p>
+  </div>
+
+  <div class="voice">
+    <p>「後療料が上がったことより、3月ルールの区切りをどう説明するかで最初つまずきました。受付に置く一言メモを作ってから、患者さんとのやり取りがぐっと楽になりました。」</p>
+    <p class="who">関東・ひとり院の先生</p>
+  </div>
+
+  <div class="voice">
+    <p>「償還払いが2027年1月からと聞いて、まだ先だと油断していました。うちも危なかった側です。今のうちに患者さんへの案内文面を作っておくつもりです。」</p>
+    <p class="who">九州・開業3年目の先生</p>
+  </div>
+
+  <div class="sec-head">
+    <h2><span class="num">3</span>あなたの「うちはこうしてる」も聞かせてください</h2>
+    <p class="note">成功でも、危なかった話でも。どちらも同じくらい役に立ちます。</p>
+  </div>
+
+  <div class="cta">
+    <h3>公式LINEから、ひとことでどうぞ</h3>
+    <p>きれいにまとめなくて大丈夫です。<br>「うちはこうしてる」「ここで失敗した」——短い一行でも、誰かの助けになります。<br>いただいた声は、地方ブロックと院の形だけの匿名で紹介します。</p>
+    <a class="line-btn" href="https://lin.ee/WNTbkci" target="_blank" rel="noopener">LINEで声を送る</a>
+    <small>お名前・院名・都道府県は掲載しません。<br>掲載してほしくない場合は、その旨ひとこと添えてください。</small>
+  </div>
+
+  <div class="crosslinks">
+    <a href="simulator.html">
+      <span class="cl-k">TOOL</span>
+      <span class="cl-t">増減シミュレーター</span>
+      <span class="cl-d">令和8年7月改定で、自院の収入がどう動くかを試算</span>
+    </a>
+    <a href="matome.html">
+      <span class="cl-k">GUIDE</span>
+      <span class="cl-t">改定のまとめ＋FAQ</span>
+      <span class="cl-d">後療料・逓減・3月ルールなど、要点をやさしく整理</span>
+    </a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    柔整の輪 ／ 提供：西一之江整骨院（院長：善茂作 昌之）<br>
+    このサイトは自院用に作成したものを無償公開しています。営利目的の勧誘は行いません。<br>
+    改定の根拠：保発0601第4号・第5号（令和8年7月改定）。制度の詳細は必ず一次資料をご確認ください。
+  </div>
+</footer>
+
+</body>
+</html>
