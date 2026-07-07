@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>柔整の輪とは｜接骨院の先生が、一緒に生き延びるための場</title>
+<meta name="description" content="令和8年7月の改定を、院長どうしで乗り越えるための無料の場。西一之江整骨院・善茂作昌之が自院用に作ったものを無償公開しています。売り込みはありません。">
+<style>
+  :root{
+    --paper:#f6f6f3;
+    --card:#fff;
+    --ink:#1b1e23;
+    --ink-soft:#5a6069;
+    --line:#e3e3dd;
+    --line-strong:#c9c9c0;
+    --plus:#127a5b;
+    --plus-bg:#e7f2ec;
+    --minus:#b23a2e;
+    --minus-bg:#f6e8e6;
+    --accent:#2b4a6f;
+    --accent-soft:#eef2f7;
+    --warn:#9a6a15;
+    --warn-bg:#f7efdd;
+    --shadow:0 1px 2px rgba(27,30,35,.05),0 8px 24px rgba(27,30,35,.06);
+    --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);
+    line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+  header{background:linear-gradient(160deg,#2b4a6f,#22374f);color:#fff;padding:40px 0 34px;}
+  .kicker{font-size:13px;letter-spacing:.14em;opacity:.82;margin:0 0 8px;}
+  header h1{font-size:27px;font-weight:800;margin:0 0 14px;letter-spacing:.02em;line-height:1.45;}
+  header p{margin:0;font-size:14.5px;opacity:.92;line-height:1.85;}
+
+  main{padding:34px 0 10px;}
+
+  .lead{
+    font-size:15.5px;color:var(--ink-soft);background:var(--card);
+    border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);margin:0;
+  }
+  .lead strong{color:var(--ink);font-weight:700;}
+
+  .sec-head{margin-top:36px;margin-bottom:16px;}
+  .sec-head h2{
+    display:flex;align-items:center;gap:12px;
+    font-size:19px;font-weight:800;margin:0;line-height:1.5;
+  }
+  .sec-head h2 .num{
+    flex:0 0 auto;width:22px;height:22px;border-radius:6px;
+    background:var(--accent);color:#fff;font-size:13px;
+    display:inline-flex;align-items:center;justify-content:center;font-weight:700;
+  }
+
+  /* 善茂作先生の語り */
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px 24px;box-shadow:var(--shadow);margin:0 0 16px;
+  }
+  .story p{margin:0 0 14px;font-size:15px;}
+  .story p:last-child{margin-bottom:0;}
+  .story .sign{
+    font-size:13.5px;color:var(--ink-soft);margin-top:18px;padding-top:14px;
+    border-top:1px dashed var(--line);text-align:right;
+  }
+  .story .sign b{color:var(--ink);}
+
+  /* 無償の理由 帯 */
+  .keybox{
+    font-size:14px;color:var(--ink-soft);
+    background:var(--accent-soft);border-left:4px solid var(--accent);
+    border-radius:0 10px 10px 0;padding:16px 18px;margin:0 0 20px;line-height:1.9;
+  }
+  .keybox b{color:var(--ink);}
+
+  /* ハブ：機能ページへのカード */
+  .hub{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px;}
+  .hub a{
+    display:block;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:18px 20px;text-decoration:none;color:var(--ink);
+    box-shadow:var(--shadow);transition:border-color .15s;
+  }
+  .hub a:hover{border-color:var(--accent);}
+  .hub a .hk{font-size:11.5px;color:var(--accent);letter-spacing:.1em;font-weight:700;}
+  .hub a .ht{font-size:16px;font-weight:800;margin-top:6px;display:block;}
+  .hub a .hd{font-size:13px;color:var(--ink-soft);margin-top:6px;display:block;line-height:1.65;}
+  @media(max-width:520px){.hub{grid-template-columns:1fr;}}
+
+  /* LINE CTA */
+  .cta{
+    background:linear-gradient(160deg,#2b4a6f,#22374f);color:#fff;
+    border-radius:14px;padding:26px;text-align:center;box-shadow:var(--shadow);margin:8px 0 10px;
+  }
+  .cta h3{font-size:18px;margin:0 0 10px;font-weight:800;}
+  .cta p{font-size:14.5px;opacity:.92;margin:0 0 20px;line-height:1.85;}
+  .cta a.line-btn{
+    display:inline-block;background:#06c755;color:#fff;text-decoration:none;
+    font-weight:800;font-size:15.5px;padding:14px 30px;border-radius:10px;
+  }
+  .cta small{display:block;margin-top:16px;font-size:12px;opacity:.72;line-height:1.7;}
+
+  footer{margin-top:40px;padding:26px 0 40px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">柔整の輪</p>
+    <h1>ひとりで抱えなくて、いい。</h1>
+    <p>令和8年7月の改定を、接骨院の院長どうしで乗り越えるための場所です。<br>
+    西一之江整骨院・善茂作昌之が、自院のために作ったものを無償で公開しています。</p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <p class="lead">
+    <strong>柔整の輪</strong>は、改定に立ち向かう接骨院の先生のための、無料のツールと共有の場です。
+    収入の増減シミュレーター、改定のまとめ、そして先生どうしが経験を分け合うページ——
+    どれも登録も費用もいりません。まずは、気になるところから覗いてみてください。
+  </p>
+
+  <div class="sec-head">
+    <h2><span class="num">1</span>なぜ、この場を作ったのか</h2>
+  </div>
+
+  <div class="story">
+    <p>はじめまして。西一之江整骨院で院長をしております、善茂作昌之と申します。</p>
+    <p>令和8年7月の改定を前に、私はずいぶん不安でした。後療料や逓減の計算、明細書の毎回発行、償還払いへの移行——一つひとつは理解できても、「うちの収入は結局どうなるのか」「何から手をつければいいのか」が見えず、夜に一人で数字を並べては溜め息をついていました。</p>
+    <p>同じ気持ちの先生は、きっと全国にたくさんいる。そう思ったとき、自分の院のために作った計算ツールや調べもののメモが、そのまま誰かの役に立つかもしれないと気づきました。それを少し整えて公開したのが、この柔整の輪です。</p>
+    <p>私は経営コンサルタントでも、団体の代表でもありません。ただ同じように改定に向き合っている、一人の院長です。だからこの場も、上から教える場ではなく、隣で「うちはこうしてる」を分け合う場にしたいと思っています。</p>
+    <p class="sign">西一之江整骨院 院長　<b>善茂作 昌之</b></p>
+  </div>
+
+  <div class="sec-head">
+    <h2><span class="num">2</span>なぜ、無料なのか</h2>
+  </div>
+
+  <div class="keybox">
+    <b>売り込みは、ありません。</b>
+    このサイトは、私が自分の院のために作ったものを、そのまま無償で公開しているだけのものです。
+    高額なセミナーへの勧誘も、システムの営業も、名簿集めもしません。
+    改定という同じ荒波の中で、少しでも仲間の負担が軽くなればいい——ただそれだけの場です。
+    もし役に立ったら、あなたの「うちはこうしてる」を一つ分けてくれたら、それで十分です。
+  </div>
+
+  <div class="sec-head">
+    <h2><span class="num">3</span>4つの入口</h2>
+  </div>
+
+  <div class="hub">
+    <a href="uchi.html">
+      <span class="hk">SHARE</span>
+      <span class="ht">僕たちの改定対策</span>
+      <span class="hd">改定への向き合い方を、院長どうしで分け合う</span>
+    </a>
+    <a href="challenge.html">
+      <span class="hk">CHALLENGE</span>
+      <span class="ht">僕たちの挑戦</span>
+      <span class="hd">集客・自費のために、うちがやってみたこと</span>
+    </a>
+    <a href="simulator.html">
+      <span class="hk">TOOL</span>
+      <span class="ht">増減シミュレーター</span>
+      <span class="hd">改定で自院の収入がどう動くかを試算</span>
+    </a>
+    <a href="matome.html">
+      <span class="hk">GUIDE</span>
+      <span class="ht">改定のまとめ＋FAQ</span>
+      <span class="hd">後療料・逓減・3月ルールなど要点を整理</span>
+    </a>
+  </div>
+
+  <div class="cta">
+    <h3>公式LINEで、つながっておいてください</h3>
+    <p>改定の続報や、集まった声のお知らせが届きます。<br>
+    あなたの「うちはこうしてる」や、うまくいかなかった挑戦も、ここから気軽に送れます。</p>
+    <a class="line-btn" href="https://lin.ee/WNTbkci" target="_blank" rel="noopener">公式LINEを友だち追加</a>
+    <small>お名前・院名・都道府県を掲載することはありません。<br>いただいた声は、地方ブロックと院の形だけの匿名で紹介します。</small>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    柔整の輪 ／ 提供：西一之江整骨院（院長：善茂作 昌之）<br>
+    このサイトは自院用に作成したものを無償公開しています。営利目的の勧誘は行いません。<br>
+    改定の根拠：保発0601第4号・第5号（令和8年7月改定）。制度の詳細は必ず一次資料をご確認ください。
+  </div>
+</footer>
+
+</body>
+</html>
