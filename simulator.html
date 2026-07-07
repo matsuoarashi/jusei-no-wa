@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7月改定 増減シミュレーター｜西一之江接骨院モデル</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root{
+    --paper:#f6f6f3;--card:#fff;--ink:#1b1e23;--ink-soft:#5a6069;
+    --line:#e3e3dd;--line-strong:#c9c9c0;
+    --plus:#127a5b;--plus-bg:#e7f2ec;--minus:#b23a2e;--minus-bg:#f6e8e6;
+    --accent:#2b4a6f;--accent-soft:#eef2f7;
+    --warn:#9a6a15;--warn-bg:#f7efdd;
+    --shadow:0 1px 2px rgba(27,30,35,.05),0 8px 24px rgba(27,30,35,.06);
+    --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    font-feature-settings:"palt";padding:0 0 64px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:40px 0 24px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--accent);
+    text-transform:uppercase;font-weight:600;display:flex;align-items:center;gap:8px}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+  h1{font-size:clamp(26px,5.4vw,38px);line-height:1.18;letter-spacing:-.01em;font-weight:800;margin:14px 0 10px}
+  h1 .q{color:var(--accent)}
+  .sub{color:var(--ink-soft);font-size:15px;max-width:54ch}
+  .demo-badge{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;
+    font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:20px;margin-top:16px}
+  .demo-badge .dot{width:6px;height:6px;border-radius:50%;background:#7fd4b0}
+
+  .modes{display:flex;gap:6px;margin:22px 0 0;background:var(--card);padding:5px;border-radius:12px;
+    border:1px solid var(--line);width:fit-content}
+  .mode-btn{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-soft);background:none;
+    border:none;padding:9px 18px;border-radius:8px;cursor:pointer;transition:.15s}
+  .mode-btn[aria-selected="true"]{background:var(--accent);color:#fff}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+    padding:26px 24px;margin-top:18px}
+  .card h2{font-size:15px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+  .card h2 .n{font-family:var(--mono);font-size:12px;color:#fff;background:var(--accent);width:20px;height:20px;
+    border-radius:6px;display:grid;place-items:center;font-weight:600}
+  .card .hint{color:var(--ink-soft);font-size:13px;margin-bottom:18px}
+  .field{margin-bottom:18px}.field:last-child{margin-bottom:0}
+  .field label{display:block;font-size:14px;font-weight:600;margin-bottom:7px}
+  .field .desc{color:var(--ink-soft);font-size:12.5px;font-weight:400;margin-left:2px}
+  .row{display:flex;align-items:center;gap:14px}
+  input[type=range]{flex:1;accent-color:var(--accent);height:4px}
+  input[type=number]{font-family:var(--mono);font-size:15px;width:96px;padding:9px 11px;
+    border:1px solid var(--line-strong);border-radius:9px;text-align:right;background:var(--paper);color:var(--ink)}
+  input[type=number]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  .unit{font-size:13px;color:var(--ink-soft);min-width:38px}
+  .ratios{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px}
+  .ratio-cell{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 12px 11px;text-align:center}
+  .ratio-cell label{font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;font-weight:600;display:block}
+  .ratio-cell input{width:100%;text-align:center;padding:7px 4px}
+  .ratio-sum{font-family:var(--mono);font-size:12px;text-align:right;margin-top:8px;color:var(--ink-soft)}
+  .ratio-sum.bad{color:var(--minus);font-weight:700}
+
+  .drop{border:1.5px dashed var(--line-strong);border-radius:14px;padding:34px 20px;text-align:center;
+    background:var(--paper);cursor:pointer;transition:.15s}
+  .drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+  .drop .big{font-size:15px;font-weight:700;margin-bottom:4px}
+  .drop .small{font-size:12.5px;color:var(--ink-soft)}
+  .drop svg{width:30px;height:30px;stroke:var(--accent);margin-bottom:12px;fill:none;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .csv-note{font-size:12px;color:var(--ink-soft);margin-top:12px;line-height:1.5}
+  .csv-status{font-family:var(--mono);font-size:13px;margin-top:14px;padding:11px 14px;border-radius:9px;display:none}
+  .csv-status.ok{display:block;background:var(--plus-bg);color:var(--plus)}
+  .csv-status.err{display:block;background:var(--minus-bg);color:var(--minus)}
+  .line-help{margin-top:16px;background:var(--accent-soft);border:1px solid var(--line);border-radius:12px;padding:18px 18px}
+  .line-help-t{font-size:14px;font-weight:800;margin-bottom:6px;color:var(--accent)}
+  .line-help-d{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:14px}
+  .line-help-d strong{color:var(--ink)}
+  .line-btn{display:inline-block;background:#06c755;color:#fff;font-size:14px;font-weight:700;
+    text-decoration:none;padding:11px 22px;border-radius:9px;transition:.15s}
+  .line-btn:hover{background:#05b34c}
+  .line-priv{font-size:11.5px;color:var(--ink-soft);margin-top:11px;line-height:1.5}
+
+  .result{margin-top:22px}
+  .verdict{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+  .verdict-top{padding:28px 24px 22px;text-align:center;border-bottom:1px solid var(--line)}
+  .verdict-label{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--ink-soft);
+    text-transform:uppercase;margin-bottom:10px}
+  .verdict-num{font-size:clamp(36px,9vw,56px);font-weight:800;letter-spacing:-.02em;line-height:1;font-family:var(--mono)}
+  .verdict-num .yen{font-size:.5em;font-weight:600;margin-right:2px}
+  .verdict-num.plus{color:var(--plus)}.verdict-num.minus{color:var(--minus)}
+  .verdict-word{font-size:15px;font-weight:700;margin-top:12px}
+  .verdict-word .pill{display:inline-block;padding:3px 12px;border-radius:20px;font-size:13px;margin-left:2px}
+  .pill.plus{background:var(--plus-bg);color:var(--plus)}.pill.minus{background:var(--minus-bg);color:var(--minus)}
+  .verdict-sub{font-size:13px;color:var(--ink-soft);margin-top:8px}
+
+  .factors{padding:22px 24px 24px}
+  .factors h3{font-size:13px;font-weight:700;margin-bottom:2px}
+  .factors .fh{font-size:12px;color:var(--ink-soft);margin-bottom:18px}
+  .factor{margin-bottom:15px}.factor:last-child{margin-bottom:0}
+  .factor-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .factor-name{font-size:13.5px;font-weight:600}
+  .factor-name .tag{font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:4px;margin-left:7px;
+    vertical-align:middle;font-weight:600}
+  .tag.up{background:var(--plus-bg);color:var(--plus)}.tag.down{background:var(--minus-bg);color:var(--minus)}
+  .factor-val{font-family:var(--mono);font-size:13.5px;font-weight:700}
+  .factor-val.plus{color:var(--plus)}.factor-val.minus{color:var(--minus)}
+  .bar-track{position:relative;height:8px;background:var(--paper);border-radius:5px;border:1px solid var(--line)}
+  .bar-axis{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--line-strong)}
+  .bar-fill{position:absolute;top:0;bottom:0;border-radius:5px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .bar-fill.plus{left:50%;background:var(--plus)}.bar-fill.minus{right:50%;background:var(--minus)}
+  .factor-note{font-size:12px;color:var(--ink-soft);margin-top:5px}
+  .net-line{border-top:2px solid var(--ink);margin-top:20px;padding-top:15px;display:flex;
+    justify-content:space-between;align-items:baseline}
+  .net-line .l{font-size:14px;font-weight:800}
+  .net-line .v{font-family:var(--mono);font-size:19px;font-weight:800}
+  .net-line .v.plus{color:var(--plus)}.net-line .v.minus{color:var(--minus)}
+  .yearly{margin-top:16px;background:var(--accent-soft);border-radius:12px;padding:15px 18px;display:flex;
+    justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .yearly .l{font-size:13px;color:var(--accent);font-weight:600}
+  .yearly .v{font-family:var(--mono);font-size:18px;font-weight:800;color:var(--accent)}
+
+  /* advice */
+  .advice{margin-top:22px}
+  .advice-head{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--accent);
+    text-transform:uppercase;font-weight:600;margin-bottom:2px}
+  .advice-lead{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-bottom:16px;line-height:1.4}
+  .adv-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+    margin-bottom:12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .adv-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+  .adv-card.risk::before{background:var(--minus)}
+  .adv-card.watch::before{background:var(--warn)}
+  .adv-card.grow::before{background:var(--plus)}
+  .adv-tag{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;padding:3px 9px;
+    border-radius:5px;letter-spacing:.04em;margin-bottom:10px}
+  .adv-card.risk .adv-tag{background:var(--minus-bg);color:var(--minus)}
+  .adv-card.watch .adv-tag{background:var(--warn-bg);color:var(--warn)}
+  .adv-card.grow .adv-tag{background:var(--plus-bg);color:var(--plus)}
+  .adv-title{font-size:15.5px;font-weight:800;margin-bottom:6px}
+  .adv-num{font-family:var(--mono);font-weight:800;font-size:1.05em}
+  .adv-body{font-size:13.5px;color:var(--ink-soft);line-height:1.72}
+  .adv-body strong{color:var(--ink);font-weight:700}
+  .adv-action{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:13px}
+  .adv-action .k{font-weight:700;color:var(--accent)}
+
+  .disclaimer{font-size:11.5px;color:var(--ink-soft);margin-top:20px;line-height:1.6;padding:14px 16px;
+    background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .disclaimer strong{color:var(--ink);font-weight:700}
+  .cta-next{margin-top:22px;background:linear-gradient(160deg,#2b4a6f,#22374f);color:#fff;border-radius:14px;padding:24px 24px}
+  .cta-next .t{font-size:15px;font-weight:700;margin-bottom:6px}
+  .cta-next .d{font-size:13px;color:#c8ccd2;line-height:1.6;margin-bottom:14px}
+  .cta-next button{font-family:var(--sans);font-size:14px;font-weight:700;background:#fff;color:var(--ink);
+    border:none;padding:11px 20px;border-radius:9px;cursor:pointer}
+  .cta-next button:hover{background:#eee}
+  .cta-form{display:flex;gap:8px;flex-wrap:wrap}
+  .cta-form input[type=email]{flex:1;min-width:180px;font-family:var(--sans);font-size:14px;
+    padding:12px 14px;border:none;border-radius:9px;background:#2c3038;color:#fff}
+  .cta-form input[type=email]::placeholder{color:#8a9099}
+  .cta-form input[type=email]:focus{outline:2px solid #7fd4b0;outline-offset:0}
+  .cta-form button{white-space:nowrap}
+  .cta-line-btn{display:inline-block;background:#06c755;color:#fff;font-size:15px;font-weight:800;
+    text-decoration:none;padding:14px 28px;border-radius:10px;transition:.15s}
+  .cta-line-btn:hover{background:#05b34c;transform:translateY(-1px)}
+  .cta-priv{font-size:11.5px;color:#9aa0a8;margin-top:11px;line-height:1.5}
+  .cta-priv a{color:#c8ccd2}
+  .cta-done{font-size:14px;color:#7fd4b0;font-weight:700;padding:6px 0}
+  .cta-err{font-size:12.5px;color:#f0a89e;margin-top:8px}
+  footer{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-soft);line-height:1.7}
+  [hidden]{display:none!important}
+  @media(max-width:480px){.card{padding:22px 18px}.verdict-top{padding:24px 18px 20px}
+    .factors{padding:20px 18px 22px}input[type=number]{width:80px}.adv-card{padding:18px 18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">令和8年7月 柔道整復療養費改定</div>
+    <h1>2部位が8割の院でも、<br><span class="q">本当に減るのか？</span></h1>
+    <p class="sub">7月改定の事務処理で、うちの受付もパニックになりました。そこで、自院の請求データで「増える院か・減る院か」を見える化する仕組みを作ったところ、思ったより役に立ったので、同じように困っている全国の先生方へ無料で開放します。初期値はうちの2026年6月・実際の請求データ（本証80人）。数値はあなたの院に合わせて動かせます。売り込みはありません。同じ改定を食らった者どうし、情報を分け合って一緒に生き延びましょう。</p>
+    <div class="demo-badge"><span class="dot"></span>西一之江接骨院が作成・無償公開</div>
+    <div class="modes" role="tablist">
+      <button class="mode-btn" role="tab" aria-selected="true" id="tab-manual">数値で試す</button>
+      <button class="mode-btn" role="tab" aria-selected="false" id="tab-csv">PDFで正確に</button>
+    </div>
+  </header>
+
+  <section id="panel-manual">
+    <div class="card">
+      <h2><span class="n">1</span>院の規模</h2>
+      <p class="hint">保険の患者さんだけで。初期値は西一之江接骨院の6月実績です。</p>
+      <div class="field"><label>1日の保険患者数 <span class="desc">／ 平均の来院数</span></label>
+        <div class="row"><input type="range" id="pt-range" min="5" max="120" value="10">
+          <input type="number" id="pt" value="10" min="0" max="500"><span class="unit">人</span></div></div>
+      <div class="field"><label>月の営業日数</label>
+        <div class="row"><input type="range" id="days-range" min="15" max="31" value="25">
+          <input type="number" id="days" value="25" min="1" max="31"><span class="unit">日</span></div></div>
+      <div class="field"><label>平均通院回数 <span class="desc">／ 1患者あたり月の実日数（実績3.1）</span></label>
+        <div class="row"><input type="range" id="visits-range" min="1" max="10" step="0.1" value="3.1">
+          <input type="number" id="visits" value="3.1" min="1" max="15" step="0.1"><span class="unit">回</span></div></div>
+    </div>
+    <div class="card">
+      <h2><span class="n">2</span>部位数の内訳</h2>
+      <p class="hint">来院患者を100として、何部位で施術している割合か。合計100に。<strong>西一之江は2部位が81%と全国的にも高め。</strong></p>
+      <div class="ratios">
+        <div class="ratio-cell"><label>1部位</label><input type="number" id="r1" value="12" min="0" max="100"></div>
+        <div class="ratio-cell"><label>2部位</label><input type="number" id="r2" value="81" min="0" max="100"></div>
+        <div class="ratio-cell"><label>3部位</label><input type="number" id="r3" value="7" min="0" max="100"></div>
+      </div>
+      <div class="ratio-sum" id="rsum">合計 100％</div>
+    </div>
+    <div class="card">
+      <h2><span class="n">3</span>再検料の取り方</h2>
+      <p class="hint">改定で再検料は「初回と2回目の後療日」の2回まで算定可に。継続通院する患者ほど取り切れます。</p>
+      <div class="field"><label>初検患者のうち、2回目まで通院が続く割合
+        <span class="desc">／ 西一之江の実績は約68%</span></label>
+        <div class="row"><input type="range" id="recheck-range" min="0" max="100" value="68">
+          <input type="number" id="recheck" value="68" min="0" max="100"><span class="unit">％</span></div></div>
+    </div>
+  </section>
+
+  <section id="panel-csv" hidden>
+    <div class="card">
+      <h2><span class="n">1</span>レセプロの「請求統計資料」を入れる</h2>
+      <p class="hint">レセプロ-M2で毎月出せる<strong>「請求統計資料」のPDF</strong>をそのまま入れてください。部位数の割合と平均通院回数を自動で読み取り、あなたの院の数値に切り替えます。手入力は不要です。</p>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="PDFファイルを選択">
+        <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L8 8m4-4l4 4"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+        <div class="big">請求統計資料のPDFをここに置く</div><div class="small">またはタップして選ぶ</div>
+        <input type="file" id="file" accept=".pdf,application/pdf" hidden></div>
+      <div class="csv-status" id="csv-status"></div>
+      <p class="csv-note">PDFはこの画面の中だけで読み取られ、どこにも送信・保存されません。統計資料には患者名が含まれないため、そのままで安全に使えます。<br>
+      ※現在はレセプロ-M2の「請求統計資料」に対応。他のレセコンや帳票は順次拡大中です。うまく読めない場合は「数値で試す」に切り替えてください。</p>
+      <div class="line-help">
+        <div class="line-help-t">うまく読み取れない・別のシステムをお使いの場合</div>
+        <div class="line-help-d">レセコンによって帳票の形式が異なるため、順次対応を広げています。読み取れない場合や他社レセコンをお使いの場合は、公式LINEから<strong>お使いのレセコン名</strong>をお知らせください。対応できるよう検討し、可能なものからご案内します。機能のご要望や、新しい機能のお知らせもこちらで受け付けています。</div>
+        <a class="line-btn" id="line-link" href="https://lin.ee/WNTbkci" target="_blank" rel="noopener">公式LINEで相談・要望を送る</a>
+        <div class="line-priv">※患者名などの個人情報は送らないでください。まずはレセコン名や、うまくいかない状況だけで大丈夫です。</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="result" id="result">
+    <div class="verdict">
+      <div class="verdict-top">
+        <div class="verdict-label">改定後の月間療養費（保険分・後療料ベース概算）</div>
+        <div class="verdict-num" id="v-num"><span class="yen">¥</span><span id="v-amt">0</span></div>
+        <div class="verdict-word">改定で、この院は<span class="pill" id="v-pill">—</span></div>
+        <div class="verdict-sub" id="v-sub"></div>
+      </div>
+      <div class="factors">
+        <h3>なぜそうなるか — 力の内訳</h3>
+        <p class="fh">増やす力と減らす力を、月あたりの金額で分解しました。</p>
+        <div class="factor"><div class="factor-head"><span class="factor-name">後療料の増額 <span class="tag up">増収</span></span>
+          <span class="factor-val plus" id="fv-kouryou">+¥0</span></div>
+          <div class="bar-track"><span class="bar-axis"></span><span class="bar-fill plus" id="fb-kouryou"></span></div>
+          <div class="factor-note">505円 → 550円。全部位のベースが上がり、部位数が多い院ほど効きます。</div></div>
+        <div class="factor"><div class="factor-head"><span class="factor-name">再検料の2回化 <span class="tag up">増収</span></span>
+          <span class="factor-val plus" id="fv-recheck">+¥0</span></div>
+          <div class="bar-track"><span class="bar-axis"></span><span class="bar-fill plus" id="fb-recheck"></span></div>
+          <div class="factor-note">2回目の後療日まで算定可に。取り切れる院ほど積み上がります。</div></div>
+        <div class="factor"><div class="factor-head"><span class="factor-name">2部位目の逓減 <span class="tag down">減収</span></span>
+          <span class="factor-val minus" id="fv-teigen">−¥0</span></div>
+          <div class="bar-track"><span class="bar-axis"></span><span class="bar-fill minus" id="fb-teigen"></span></div>
+          <div class="factor-note">2部位目が80％に。多部位が多い院ほど痛みます。西一之江の最大の出血点。</div></div>
+        <div class="net-line"><span class="l">差し引きの月間インパクト</span><span class="v" id="net-v">¥0</span></div>
+        <div class="yearly"><span class="l">年間に換算すると</span><span class="v" id="year-v">¥0</span></div>
+      </div>
+    </div>
+
+    <!-- ADVICE LAYER -->
+    <div class="advice">
+      <div class="advice-head">この院がいま打つべき手</div>
+      <div class="advice-lead" id="adv-lead">—</div>
+
+      <div class="adv-card grow">
+        <span class="adv-tag">攻め ／ 取りこぼし防止</span>
+        <div class="adv-title">再検料の2回目を、取り切れているか</div>
+        <div class="adv-body">6月の初検は<strong>30人</strong>。うち継続通院が約<strong>68%</strong>。改定後はこの層から再検料をもう1回取れます。<span id="adv-recheck-amt" class="adv-num"></span>の増収が、ここを意識するだけで守れます。逆に「初回しか算定していない」運用だと、この増収はまるごと消えます。</div>
+        <div class="adv-action"><span class="k">現場の一手：</span>初検した患者の2回目来院時に、再検料の算定を受付でチェックする運用に。</div>
+      </div>
+
+      <div class="adv-card risk">
+        <span class="adv-tag">守り ／ 返戻リスク</span>
+        <div class="adv-title">治癒・中止の18人が、3月ルールの地雷</div>
+        <div class="adv-body">6月に治癒・中止がついた患者は<strong>18人</strong>。改定後は、<strong>中止・治癒から3か月以内に同じ院へ再来院すると、別の負傷でも初検料が算定できません</strong>。知らずに初検料を取れば返戻。特に「中止」の患者は痛みが再発して戻りやすい層です。</div>
+        <div class="adv-action"><span class="k">現場の一手：</span>この18人の中止日を控え、再来院時に「初検NG・再検からのスタートで2回まで」を受付で即判定できる状態に。</div>
+      </div>
+
+      <div class="adv-card watch">
+        <span class="adv-tag">来年への布石 ／ 償還払い</span>
+        <div class="adv-title">5か月以上の長期患者が、すでに12人</div>
+        <div class="adv-body">初検から<strong>5か月以上継続している患者が12人</strong>（最長は約7か月）。2027年1月から「直近12か月で8か月以上・9部位以上」の患者は償還払いへ移ります。<strong>判定に使う12か月は、今この瞬間から積み上がっています。</strong>この12人が予備軍です。</div>
+        <div class="adv-action"><span class="k">現場の一手：</span>長期化した患者の負傷原因・施術継続の必要性を、今のうちにカルテで固めておく。該当者を毎月追跡する仕組みが要ります。</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>この数字は後療料ベースの概算です。</strong> 初検料・再検料の細かな算定条件、罨法・電療の実施状況、端数処理、保険割合までは完全には反映していません。実際の請求額とは差が出ます。算定判断の最終確認は、必ず管轄の厚生局・保険者の最新通知（保発0601第4号・第5号）でお願いします。
+    </div>
+    <div class="cta-next">
+      <div class="t">この改定、ひとりの院で抱えなくていい</div>
+      <div class="d">これは西一之江整骨院が、自分の院の受付を助けるために作ったものです。同じ改定で困っている先生がたくさんいると知って、そのまま開放することにしました。使ってみて気づいたこと、「うちのレセコンでも読めるようにしてほしい」「こういう判定も欲しい」——そんな声を持ち寄って、みんなで少しずつ育てていけたらと思っています。一緒に、この改定を生き延びましょう。</div>
+      <a class="cta-line-btn" href="https://lin.ee/WNTbkci" target="_blank" rel="noopener">「柔整の輪」に加わる（公式LINE）</a>
+      <div class="cta-priv">売り込みはしません。届くのは、改定を乗り切るための情報と、ツールの更新のお知らせ、そして先生方から寄せられた知恵だけです。いつでも離れられます。</div>
+    </div>
+  </div>
+
+  <footer>
+    本ツールは西一之江接骨院が自院のために作り、同じ改定で困る先生方のために無償公開しているものです。初期値は当院の実データ（2026年6月）。数字は概算につき、算定判断の根拠にはなりません。ご自由にお使いください。<br>
+    改定根拠：厚生労働省 保発0601第4号・第5号（令和8年6月1日）。
+  </footer>
+</div>
+
+<script>
+(() => {
+  const OLD_K=505,NEW_K=550,RECHECK=420,T2=0.80,T3=0.60;
+  const JUNE_FIRST=30, TENKI_STOP=18, LONG_CONT=12; // 実測固定値
+  const $=id=>document.getElementById(id);
+  const yen=n=>'¥'+Math.round(n).toLocaleString('ja-JP');
+  const signYen=n=>(n>=0?'+':'−')+'¥'+Math.abs(Math.round(n)).toLocaleString('ja-JP');
+
+  const tabM=$('tab-manual'),tabC=$('tab-csv'),panM=$('panel-manual'),panC=$('panel-csv');
+  tabM.onclick=()=>{tabM.setAttribute('aria-selected','true');tabC.setAttribute('aria-selected','false');
+    panM.hidden=false;panC.hidden=true;calc();};
+  tabC.onclick=()=>{tabC.setAttribute('aria-selected','true');tabM.setAttribute('aria-selected','false');
+    panC.hidden=false;panM.hidden=true;};
+
+  const link=(r,n)=>{const R=$(r),N=$(n);R.oninput=()=>{N.value=R.value;calc();};N.oninput=()=>{R.value=N.value;calc();};};
+  link('pt-range','pt');link('days-range','days');link('recheck-range','recheck');link('visits-range','visits');
+  ['r1','r2','r3'].forEach(id=>$(id).oninput=()=>{ratioSum();calc();});
+
+  function ratioSum(){const s=(+$('r1').value||0)+(+$('r2').value||0)+(+$('r3').value||0);
+    const el=$('rsum');el.textContent='合計 '+s+'％';el.classList.toggle('bad',s!==100);return s;}
+
+  function perVisit(k,price,t2,t3){if(k===1)return price;if(k===2)return price+price*t2;return price+price*t2+price*t3;}
+
+  function calc(){
+    const pt=+$('pt').value||0,days=+$('days').value||0,visitsAvg=+$('visits').value||1;
+    let r1=+$('r1').value||0,r2=+$('r2').value||0,r3=+$('r3').value||0;
+    const sum=r1+r2+r3;if(sum>0){r1/=sum;r2/=sum;r3/=sum;}
+    const recheckRate=(+$('recheck').value||0)/100;
+    const patients=pt*days;                     // 月間実患者数(延べ)
+    const totalVisits=patients*visitsAvg;       // 月間延べ後療回数(近似)
+
+    const oldPv=r1*perVisit(1,OLD_K,1.0,T3)+r2*perVisit(2,OLD_K,1.0,T3)+r3*perVisit(3,OLD_K,1.0,T3);
+    const newPv=r1*perVisit(1,NEW_K,T2,T3)+r2*perVisit(2,NEW_K,T2,T3)+r3*perVisit(3,NEW_K,T2,T3);
+    const priceOnlyPv=r1*perVisit(1,NEW_K,1.0,T3)+r2*perVisit(2,NEW_K,1.0,T3)+r3*perVisit(3,NEW_K,1.0,T3);
+
+    const oldTotal=oldPv*totalVisits;
+    const fKouryou=(priceOnlyPv-oldPv)*totalVisits;
+    const fTeigen=(newPv-priceOnlyPv)*totalVisits;
+    // 再検料：初検患者数を「延べ患者の一定割合」でなく、規模比で実測30人をスケール
+    const scale=patients/(10*25);               // 西一之江=250延べ患者を基準に相似拡大
+    const firstCount=JUNE_FIRST*scale;
+    const fRecheck=firstCount*recheckRate*RECHECK;
+    const net=fKouryou+fRecheck+fTeigen;
+    const newTotal=oldTotal+net;
+    render({oldTotal,newTotal,fKouryou,fRecheck,fTeigen,net,recheckRate,scale});
+  }
+
+  function render(d){
+    $('v-amt').textContent=Math.round(d.newTotal).toLocaleString('ja-JP');
+    const num=$('v-num'),pill=$('v-pill'),up=d.net>=0;
+    num.classList.toggle('plus',up);num.classList.toggle('minus',!up);
+    pill.textContent=up?'増える見込み':'減る見込み';pill.className='pill '+(up?'plus':'minus');
+    $('v-sub').textContent='改定前より約 '+signYen(d.net)+' / 月（'+(up?'＋':'−')+Math.abs(d.net/d.oldTotal*100).toFixed(1)+'％）';
+    const mag=Math.max(Math.abs(d.fKouryou),Math.abs(d.fRecheck),Math.abs(d.fTeigen),1);
+    const setF=(v,b,val)=>{$(v).textContent=signYen(val);$(b).style.width=Math.min(Math.abs(val)/mag*50,50)+'%';};
+    setF('fv-kouryou','fb-kouryou',d.fKouryou);setF('fv-recheck','fb-recheck',d.fRecheck);setF('fv-teigen','fb-teigen',d.fTeigen);
+    const nv=$('net-v');nv.textContent=signYen(d.net);nv.className='v '+(d.net>=0?'plus':'minus');
+    $('year-v').textContent=signYen(d.net*12);
+    // advice lead
+    const lead=$('adv-lead');
+    if(d.net>=0){lead.innerHTML='逓減の減収を、後療料増額が上回りました。<strong>守りきれば増収。ただし取りこぼすと簡単にマイナスへ転びます。</strong>';}
+    else{lead.innerHTML='逓減の減収が勝っています。<strong>再検料の取り切りと、返戻の防止でどこまで戻せるかが勝負です。</strong>';}
+    $('adv-recheck-amt').textContent='月 '+signYen(Math.round(JUNE_FIRST*d.scale)*d.recheckRate*RECHECK/1);
+    // 上の式は表示簡略化のため概算再掲
+    $('adv-recheck-amt').textContent='月 '+signYen(d.fRecheck)+'／年 '+signYen(d.fRecheck*12);
+  }
+
+  // CSV
+  const drop=$('drop'),file=$('file'),status=$('csv-status');
+  drop.onclick=()=>file.click();
+  drop.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();file.click();}};
+  ['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+  drop.addEventListener('drop',e=>{if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
+  file.onchange=()=>{if(file.files[0])handleFile(file.files[0]);};
+
+  async function handleFile(f){
+    if(f.type!=='application/pdf' && !f.name.toLowerCase().endsWith('.pdf')){
+      showStatus(false,'PDFファイルを入れてください。レセプロの「請求統計資料」のPDFに対応しています。');return;
+    }
+    showStatus(true,'読み取り中…');
+    try{
+      const buf=await f.arrayBuffer();
+      const text=await pdfToText(buf);
+      parseStats(text);
+    }catch(err){
+      showStatus(false,'読み取れませんでした。レセプロ-M2の「請求統計資料」のPDFかご確認のうえ、うまくいかない場合は「数値で試す」をお使いください。');
+    }
+  }
+
+  // PDF.js で全ページのテキストを連結して返す
+  async function pdfToText(buf){
+    const pdfjsLib=window['pdfjsLib'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    let out='';
+    for(let p=1;p<=pdf.numPages;p++){
+      const page=await pdf.getPage(p);
+      const tc=await page.getTextContent();
+      // Y座標でざっくり行にまとめる
+      const rows={};
+      tc.items.forEach(it=>{
+        const y=Math.round(it.transform[5]);
+        (rows[y]=rows[y]||[]).push([it.transform[4],it.str]);
+      });
+      Object.keys(rows).sort((a,b)=>b-a).forEach(y=>{
+        const line=rows[y].sort((a,b)=>a[0]-b[0]).map(x=>x[1]).join(' ');
+        out+=line+'\n';
+      });
+    }
+    return out;
+  }
+
+  // 「本証小計」の行から 件数・通院数・負傷数・1〜3部位 を抽出
+  function parseStats(text){
+    const lines=text.split(/\n/);
+    let hit=null;
+    for(const line of lines){
+      if(line.includes('本証小計')||line.includes('本証')&&/\d/.test(line)){
+        const nums=line.replace(/,/g,'').match(/\d+/g);
+        if(nums&&nums.length>=6){hit=nums.map(Number);break;}
+      }
+    }
+    if(!hit)throw 0;
+    const [kensu,tsuin,fusho,p1,p2,p3]=hit;
+    const tot=p1+p2+p3;
+    if(!tot)throw 0;
+    // フォームへ反映
+    $('r1').value=Math.round(p1/tot*100);
+    $('r2').value=Math.round(p2/tot*100);
+    $('r3').value=Math.round(p3/tot*100);
+    const visitsAvg=(tsuin/kensu);
+    $('visits').value=visitsAvg.toFixed(1);$('visits-range').value=Math.min(visitsAvg,10);
+    // 1日患者数 = 通院数 / 営業日
+    const est=Math.max(5,Math.round(tsuin/(+$('days').value||25)));
+    $('pt').value=est;$('pt-range').value=Math.min(est,120);
+    ratioSum();
+    showStatus(true,`読み取り成功：本証${kensu}件・通院${tsuin}回。1部位${Math.round(p1/tot*100)}％・2部位${Math.round(p2/tot*100)}％・3部位${Math.round(p3/tot*100)}％、平均通院${visitsAvg.toFixed(1)}回。下にあなたの院の試算を表示しました。`);
+    calc();
+    $('result').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function showStatus(ok,msg){status.className='csv-status '+(ok?'ok':'err');status.textContent=msg;}
+
+  ratioSum();calc();
+})();
+</script>
+</body>
+</html>
