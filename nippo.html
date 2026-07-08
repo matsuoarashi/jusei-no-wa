@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>日報入力｜柔整の輪</title>
+<meta name="description" content="スマホで30秒、日次の売上と新患を記録。データはあなたの院のスプレッドシートにだけ保存されます。">
+<style>
+  :root{
+    --paper:#f6f6f3;--card:#fff;--ink:#1b1e23;--ink-soft:#5a6069;
+    --line:#e3e3dd;--line-strong:#c9c9c0;
+    --plus:#127a5b;--plus-bg:#e7f2ec;--minus:#b23a2e;--minus-bg:#f6e8e6;
+    --accent:#2b4a6f;--accent-soft:#eef2f7;--warn:#9a6a15;--warn-bg:#f7efdd;
+    --shadow:0 1px 2px rgba(27,30,35,.05),0 8px 24px rgba(27,30,35,.06);
+    --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    padding-bottom:60px;-webkit-font-smoothing:antialiased;font-size:16px}
+  .wrap{max-width:560px;margin:0 auto;padding:0 16px}
+  header{background:linear-gradient(160deg,#2b4a6f,#22374f);color:#fff;padding:22px 0 18px}
+  .kicker{font-size:11.5px;letter-spacing:.14em;opacity:.82;margin-bottom:4px}
+  header h1{font-size:20px;font-weight:800}
+  header p{font-size:12.5px;opacity:.88;margin-top:6px;line-height:1.6}
+
+  /* tabs */
+  .tabs{display:flex;gap:6px;background:var(--card);padding:5px;border-radius:12px;
+    border:1px solid var(--line);margin:14px 0 0}
+  .tab{flex:1;font-family:var(--sans);font-size:14.5px;font-weight:700;color:var(--ink-soft);
+    background:none;border:none;padding:12px 0;border-radius:8px;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--accent);color:#fff}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:18px 16px;margin-top:14px}
+  .card h2{font-size:14px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .card h2 .n{font-family:var(--mono);font-size:11px;color:#fff;background:var(--accent);
+    width:19px;height:19px;border-radius:5px;display:grid;place-items:center}
+
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px}
+  .field label .opt{font-size:11.5px;color:var(--ink-soft);font-weight:400;margin-left:4px}
+  input[type=date],input[type=number],input[type=text],select{
+    width:100%;font-family:var(--sans);font-size:16px;padding:13px 14px;
+    border:1px solid var(--line-strong);border-radius:10px;background:var(--paper);color:var(--ink)}
+  input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+  input[type=number]{font-family:var(--mono);text-align:right}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+  /* 自費内訳: 折りたたみ */
+  details.jihi{border:1px solid var(--line);border-radius:10px;background:var(--paper);margin-top:8px}
+  details.jihi summary{padding:12px 14px;font-size:13.5px;font-weight:700;cursor:pointer;color:var(--accent)}
+  details.jihi .inner{padding:4px 14px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  details.jihi .inner .field{margin-bottom:0}
+  details.jihi .inner label{font-size:12px;font-weight:600}
+
+  /* 媒体タップ選択 */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:var(--sans);font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:100px;
+    border:1px solid var(--line-strong);background:var(--card);color:var(--ink-soft);cursor:pointer}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .sendBtn{margin-top:16px;width:100%;background:var(--accent);color:#fff;border:none;
+    font-family:var(--sans);font-size:16px;font-weight:800;padding:16px;border-radius:12px;cursor:pointer}
+  .sendBtn:disabled{opacity:.5}
+  .sendBtn:hover{background:#22374f}
+
+  .status{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;
+    font-family:var(--mono);font-size:13px;line-height:1.6}
+  .status.ok{display:block;background:var(--plus-bg);color:var(--plus)}
+  .status.err{display:block;background:var(--minus-bg);color:var(--minus)}
+
+  /* 月間サマリー */
+  .summary{margin-top:14px;background:var(--accent-soft);border:1px solid var(--line);
+    border-radius:12px;padding:14px 16px}
+  .summary .st{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.06em;margin-bottom:8px}
+  .summary .row{display:flex;justify-content:space-between;font-size:13.5px;padding:3px 0}
+  .summary .row .v{font-family:var(--mono);font-weight:700}
+  .summary .note{font-size:11px;color:var(--ink-soft);margin-top:8px;line-height:1.5}
+
+  .privacy{font-size:11.5px;color:var(--ink-soft);margin-top:14px;line-height:1.7;
+    padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:10px}
+  .privacy strong{color:var(--ink)}
+  .setup-warn{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--warn-bg);
+    color:var(--warn);font-size:12.5px;line-height:1.7;display:none}
+  .setup-warn.show{display:block}
+  footer{margin-top:26px;padding:16px;text-align:center;font-size:11px;color:var(--ink-soft);line-height:1.7}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">柔整の輪</p>
+    <h1>日報入力</h1>
+    <p>スマホで30秒。今日の数字と新患を、あなたの院のスプレッドシートへ。</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="setup-warn" id="setupWarn">
+    ⚠ 送信先が未設定です。このページのHTML内 <b>GAS_URL</b> に、設定手順書どおり
+    Apps ScriptのウェブアプリURLを貼り付けてください。設定するまで送信はできません（入力の練習は可能です）。
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" id="tab-nippo">今日の日報</button>
+    <button class="tab" role="tab" aria-selected="false" id="tab-shinkan">新患を登録</button>
+  </div>
+
+  <!-- ============ 日報タブ ============ -->
+  <section id="panel-nippo">
+    <div class="card">
+      <h2><span class="n">1</span>今日の数字</h2>
+      <div class="field"><label>日付</label><input type="date" id="n-date"></div>
+      <div class="grid2">
+        <div class="field"><label>人数</label><input type="number" id="n-people" placeholder="0" min="0" inputmode="numeric"></div>
+        <div class="field"><label>負担金（保険窓口）</label><input type="number" id="n-futan" placeholder="0" min="0" inputmode="numeric"></div>
+      </div>
+      <div class="field"><label>自費 合計<span class="opt">内訳を入れると自動計算</span></label>
+        <input type="number" id="n-jihi" placeholder="0" min="0" inputmode="numeric">
+        <details class="jihi"><summary>自費の内訳を入力する（任意）</summary>
+          <div class="inner">
+            <div class="field"><label>カイロ</label><input type="number" class="jd" data-k="カイロ" placeholder="0" inputmode="numeric"></div>
+            <div class="field"><label>ブロック矯正</label><input type="number" class="jd" data-k="ブロック" placeholder="0" inputmode="numeric"></div>
+            <div class="field"><label>ハイボルテージ</label><input type="number" class="jd" data-k="ハイボルテージ" placeholder="0" inputmode="numeric"></div>
+            <div class="field"><label>猫背矯正</label><input type="number" class="jd" data-k="猫背" placeholder="0" inputmode="numeric"></div>
+            <div class="field"><label>下半身</label><input type="number" class="jd" data-k="下半身" placeholder="0" inputmode="numeric"></div>
+            <div class="field"><label>延長マッサージ</label><input type="number" class="jd" data-k="延長マッサージ" placeholder="0" inputmode="numeric"></div>
+            <div class="field"><label>完全自費</label><input type="number" class="jd" data-k="完全自費" placeholder="0" inputmode="numeric"></div>
+          </div>
+        </details>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>物販</label><input type="number" id="n-buppan" placeholder="0" min="0" inputmode="numeric"></div>
+        <div class="field"><label>材料</label><input type="number" id="n-zairyo" placeholder="0" min="0" inputmode="numeric"></div>
+      </div>
+      <button class="sendBtn" id="sendNippo">この内容で送信</button>
+      <div class="status" id="st-nippo"></div>
+    </div>
+
+    <div class="summary" id="summary" style="display:none">
+      <div class="st">今月ここまで（この端末での送信分）</div>
+      <div class="row"><span>延べ人数</span><span class="v" id="s-people">0 人</span></div>
+      <div class="row"><span>負担金 累計</span><span class="v" id="s-futan">¥0</span></div>
+      <div class="row"><span>自費 累計</span><span class="v" id="s-jihi">¥0</span></div>
+      <div class="row"><span>総売上 累計</span><span class="v" id="s-total">¥0</span></div>
+      <div class="row"><span>窓口単価（負担金+自費 ÷ 人数）</span><span class="v" id="s-tanka">¥0</span></div>
+      <div class="note">※正式な集計はスプレッドシート側で行われます。ここは目安表示です。</div>
+    </div>
+  </section>
+
+  <!-- ============ 新患タブ ============ -->
+  <section id="panel-shinkan" hidden>
+    <div class="card">
+      <h2><span class="n">2</span>新患を登録</h2>
+      <div class="field"><label>初診日</label><input type="date" id="s-date"></div>
+      <div class="field"><label>氏名</label><input type="text" id="s-name" placeholder="例）山田 太郎"></div>
+      <div class="field"><label>何で知って来ましたか？（媒体）</label>
+        <div class="chips" id="baitai">
+          <button class="chip" data-v="紹介">紹介</button>
+          <button class="chip" data-v="ホームページ">ホームページ</button>
+          <button class="chip" data-v="Googleマップ">Googleマップ</button>
+          <button class="chip" data-v="通りがかり">通りがかり</button>
+          <button class="chip" data-v="チラシ">チラシ</button>
+          <button class="chip" data-v="SNS">SNS</button>
+          <button class="chip" data-v="その他">その他</button>
+        </div>
+      </div>
+      <div class="field"><label>担当<span class="opt">任意</span></label><input type="text" id="s-tanto" placeholder="例）Z"></div>
+      <div class="field"><label>主訴（来院時の症状）<span class="opt">任意</span></label><input type="text" id="s-shuso" placeholder="例）腰痛"></div>
+      <div class="field"><label>職業・ライフスタイル<span class="opt">任意</span></label><input type="text" id="s-job" placeholder="例）デスクワーク"></div>
+      <button class="sendBtn" id="sendShinkan">この内容で登録</button>
+      <div class="status" id="st-shinkan"></div>
+    </div>
+  </section>
+
+  <div class="privacy">
+    <strong>データの行き先について。</strong>
+    このページに入力した内容は、<strong>あなたの院が管理するGoogleスプレッドシートにだけ</strong>送信されます。
+    柔整の輪や第三者のサーバーには保存されません。患者さんのお名前を含む情報の管理責任は各院にあります。
+    共有端末では入力後にページを閉じてください。
+  </div>
+
+  <footer>
+    柔整の輪 ／ 提供：西一之江整骨院（自院用に作成したものの無償公開・売り込みはありません）
+  </footer>
+</div>
+
+<script>
+(() => {
+  // ★★★ 設定手順書に従い、Apps Script のウェブアプリURLをここに貼る ★★★
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbwKNQA_zykQ9wunammEXcwPYUC2ioEF3auwAqL_EucMBOEYFFfwxtDEyO5NRwu4aAo/exec";  // 例: "https://script.google.com/macros/s/XXXXX/exec"
+
+  const $=id=>document.getElementById(id);
+  const today=()=>new Date().toLocaleDateString('sv-SE'); // YYYY-MM-DD (local)
+  $('n-date').value=today(); $('s-date').value=today();
+  if(!GAS_URL) $('setupWarn').classList.add('show');
+
+  // tabs
+  const tN=$('tab-nippo'),tS=$('tab-shinkan'),pN=$('panel-nippo'),pS=$('panel-shinkan');
+  tN.onclick=()=>{tN.setAttribute('aria-selected','true');tS.setAttribute('aria-selected','false');pN.hidden=false;pS.hidden=true;};
+  tS.onclick=()=>{tS.setAttribute('aria-selected','true');tN.setAttribute('aria-selected','false');pS.hidden=false;pN.hidden=true;};
+
+  // 自費内訳 → 合計へ自動反映
+  document.querySelectorAll('.jd').forEach(el=>{
+    el.addEventListener('input',()=>{
+      let sum=0;document.querySelectorAll('.jd').forEach(e=>{sum+=(+e.value||0);});
+      if(sum>0)$('n-jihi').value=sum;
+    });
+  });
+
+  // 媒体チップ（単一選択）
+  let baitaiSel='';
+  document.querySelectorAll('#baitai .chip').forEach(ch=>{
+    ch.addEventListener('click',e=>{
+      e.preventDefault();
+      document.querySelectorAll('#baitai .chip').forEach(c=>c.classList.remove('on'));
+      ch.classList.add('on');baitaiSel=ch.dataset.v;
+    });
+  });
+
+  // 端末内の月間目安（localStorageではなくメモリ+送信ログをGAS側が正とする設計。
+  // 端末目安はsessionStorage的な簡易保持: ページ再訪でも見えるようlocalStorage使用は避け、
+  // ここでは送信成功時のみメモリ集計＋当月分をcookieなしで保持しないシンプル方針）
+  // → 試作段階: 送信成功のたびに画面の累計に加算（リロードでリセット。正はスプレッドシート）
+  let acc={people:0,futan:0,jihi:0,total:0};
+  function renderSummary(){
+    $('summary').style.display='block';
+    $('s-people').textContent=acc.people+' 人';
+    $('s-futan').textContent='¥'+acc.futan.toLocaleString();
+    $('s-jihi').textContent='¥'+acc.jihi.toLocaleString();
+    $('s-total').textContent='¥'+acc.total.toLocaleString();
+    $('s-tanka').textContent=acc.people>0?'¥'+Math.round((acc.futan+acc.jihi)/acc.people).toLocaleString():'—';
+  }
+
+  function show(id,ok,msg){const el=$(id);el.className='status '+(ok?'ok':'err');el.textContent=msg;}
+
+  async function send(payload,stId,btn){
+    if(!GAS_URL){show(stId,false,'送信先が未設定です。GAS_URLを設定してください。');return false;}
+    btn.disabled=true;
+    try{
+      await fetch(GAS_URL,{method:'POST',mode:'no-cors',
+        headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+      // no-cors のため応答は読めない。到達前提で成功表示（失敗時はシート側で気づける）
+      show(stId,true,'送信しました。スプレッドシートをご確認ください。');
+      return true;
+    }catch(e){
+      show(stId,false,'送信に失敗しました。通信環境を確認して、もう一度お試しください。');
+      return false;
+    }finally{btn.disabled=false;}
+  }
+
+  // 日報送信
+  $('sendNippo').addEventListener('click',async()=>{
+    const jd={};document.querySelectorAll('.jd').forEach(e=>{jd[e.dataset.k]=+e.value||0;});
+    const p={type:'nippo',date:$('n-date').value,people:+$('n-people').value||0,
+      futan:+$('n-futan').value||0,jihi:+$('n-jihi').value||0,uchiwake:jd,
+      buppan:+$('n-buppan').value||0,zairyo:+$('n-zairyo').value||0};
+    if(!p.date){show('st-nippo',false,'日付を入れてください。');return;}
+    const ok=await send(p,'st-nippo',$('sendNippo'));
+    if(ok){acc.people+=p.people;acc.futan+=p.futan;acc.jihi+=p.jihi;
+      acc.total+=p.futan+p.jihi+p.buppan+p.zairyo;renderSummary();
+      ['n-people','n-futan','n-jihi','n-buppan','n-zairyo'].forEach(id=>$(id).value='');
+      document.querySelectorAll('.jd').forEach(e=>e.value='');}
+  });
+
+  // 新患送信
+  $('sendShinkan').addEventListener('click',async()=>{
+    const p={type:'shinkan',date:$('s-date').value,name:$('s-name').value.trim(),
+      baitai:baitaiSel,tanto:$('s-tanto').value.trim(),
+      shuso:$('s-shuso').value.trim(),job:$('s-job').value.trim()};
+    if(!p.date||!p.name){show('st-shinkan',false,'初診日と氏名は必須です。');return;}
+    if(!p.baitai){show('st-shinkan',false,'媒体をひとつ選んでください（集客分析の要です）。');return;}
+    const ok=await send(p,'st-shinkan',$('sendShinkan'));
+    if(ok){$('s-name').value='';$('s-shuso').value='';$('s-job').value='';
+      baitaiSel='';document.querySelectorAll('#baitai .chip').forEach(c=>c.classList.remove('on'));}
+  });
+})();
+</script>
+</body>
+</html>
